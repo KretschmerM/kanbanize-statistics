@@ -46,8 +46,20 @@ class AllController extends Controller
 
         return $this->index();
     }
-    public function OpenSettingsOnButtonClick()
+
+    public function openSettingsOnButtonClick()
     {
+        $fetchTableDate = $this->statisticResultRepository->openStatisticOptions();
+
+        return view('settings');
+    }
+
+    public function saveSettingsOnButtonClick()
+    {
+        $data = request()->all();
+
+        $saveTableData = $this->statisticResultRepository->saveStatisticOptions($data);
+
         return view('settings');
     }
 }

@@ -21,6 +21,11 @@ class Statistic extends Model
         return $this->hasMany(StatisticAmount::class, 'mainId', 'id');
     }
 
+    public function options()
+    {
+        return $this->hasOne(StatisticOptions::class,'boardId', 'id');
+    }
+
     protected $casts = [
         'date' => 'date'
     ];

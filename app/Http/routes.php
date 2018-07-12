@@ -11,7 +11,9 @@
 */
 Route::get('/'          ,'AllController@index');
 Route::get('/generate/{boardId}' ,'AllController@loadDataOnButtonClick');
-Route::get('/settings', 'AllController@OpenSettingsOnButtonClick');
+Route::get('/settings', 'AllController@openSettingsOnButtonClick');
+Route::post('/settings', 'AllController@saveSettingsOnButtonClick');
+
 
 //Route::resource('/','AllController@index');
 

@@ -5,6 +5,7 @@ use App\Modules;
 use App\Modules\Statistic\Contracts\StatisticResultRepositoryContract;
 use App\Modules\Statistic\Models\Statistic;
 use App\Modules\Statistic\Models\StatisticColumn;
+use App\Modules\Statistic\Models\StatisticOptions;
 use App\Modules\Statistic\Models\StatisticAmount;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ]);
 
         $body = $response->getBody();
-
 
         $data = \GuzzleHttp\json_decode($body);
 
@@ -154,5 +154,25 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             }
         }
         return $tableHeader;
+    }
+
+    public function openStatisticOptions()
+    {
+        // TODO: Implement openSettingsOnButtonClick() method.
+    }
+
+    public function saveStatisticOptions($data)
+    {
+        $options['data'] = [
+            'name' => $data['name'] ?? '',
+            'open' => $data['open'] ?? [],
+            'doing' => $data['doing'] ?? [],
+            'done' => $data['done'] ?? [],
+            'time' => $data['time'] ?? [],
+        ];
+
+            $json = json_encode($options);
+
+        $options =  StatisticOptions::updateOrCreate(['boardId' => 50], ['options' => $json]);
     }
 }
