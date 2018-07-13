@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStatisticMainTable extends Migration
+class CreateKanbanizeStatisticAmount extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateStatisticMainTable extends Migration
      */
     public function up()
     {
-        Schema::create('kanbanize_statistic_main', function (Blueprint $table) {
+        Schema::create('kanbanize_statistic_amount', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('date');
-            $table->integer('boardId');
-
-            $table->index(['date', 'boardId'], 'UKEY_date_boardId');
+            $table->integer('mainId');
+            $table->integer('columnId');
+            $table->integer('count');
+            $table->string('user');
         });
     }
-
     /**
      * Reverse the migrations.
      *
@@ -29,6 +28,6 @@ class CreateStatisticMainTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kanbanize_statistic_main');
+        Schema::dropIfExists('kanbanize_statistic_amount');
     }
 }

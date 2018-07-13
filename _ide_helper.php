@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.6.26 on 2018-07-12 07:27:48.
+ * Generated for Laravel 5.6.27 on 2018-07-12 14:03:22.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -5263,6 +5263,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $driver
          * @return mixed 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function driver($driver = null)
@@ -6196,6 +6197,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $driver
          * @return mixed 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function driver($driver = null)
@@ -6726,7 +6728,7 @@ namespace Illuminate\Support\Facades {
          * Create a new redirect response to a named route.
          *
          * @param string $route
-         * @param array $parameters
+         * @param mixed $parameters
          * @param int $status
          * @param array $headers
          * @return \Illuminate\Http\RedirectResponse 
@@ -6741,7 +6743,7 @@ namespace Illuminate\Support\Facades {
          * Create a new redirect response to a controller action.
          *
          * @param string $action
-         * @param array $parameters
+         * @param mixed $parameters
          * @param int $status
          * @param array $headers
          * @return \Illuminate\Http\RedirectResponse 
@@ -7065,6 +7067,21 @@ namespace Illuminate\Support\Facades {
         public static function replace($input)
         {
             return \Illuminate\Http\Request::replace($input);
+        }
+        
+        /**
+         * This method belongs to Symfony HttpFoundation and is not usually needed when using Laravel.
+         * 
+         * Instead, you may use the "input" method.
+         *
+         * @param string $key
+         * @param mixed $default
+         * @return mixed 
+         * @static 
+         */ 
+        public static function get($key, $default = null)
+        {
+            return \Illuminate\Http\Request::get($key, $default);
         }
         
         /**
@@ -7506,26 +7523,6 @@ namespace Illuminate\Support\Facades {
         {
             //Method inherited from \Symfony\Component\HttpFoundation\Request            
             return \Illuminate\Http\Request::getHttpMethodParameterOverride();
-        }
-        
-        /**
-         * Gets a "parameter" value from any bag.
-         * 
-         * This method is mainly useful for libraries that want to provide some flexibility. If you don't need the
-         * flexibility in controllers, it is better to explicitly get request parameters from the appropriate
-         * public property instead (attributes, query, request).
-         * 
-         * Order of precedence: PATH (routing placeholders or custom attributes), GET, BODY
-         *
-         * @param string $key The key
-         * @param mixed $default The default value if the parameter key does not exist
-         * @return mixed 
-         * @static 
-         */ 
-        public static function get($key, $default = null)
-        {
-            //Method inherited from \Symfony\Component\HttpFoundation\Request            
-            return \Illuminate\Http\Request::get($key, $default);
         }
         
         /**
@@ -10070,6 +10067,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $driver
          * @return mixed 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function driver($driver = null)
@@ -11764,6 +11762,7 @@ namespace Illuminate\Support\Facades {
          * @param array $data
          * @param array $mergeData
          * @return \Illuminate\Contracts\View\View 
+         * @throws \InvalidArgumentException
          * @static 
          */ 
         public static function first($views, $data = array(), $mergeData = array())
@@ -12480,6 +12479,154 @@ namespace Illuminate\Support\Facades {
         public static function renderTranslation()
         {
             return \Illuminate\View\Factory::renderTranslation();
+        }
+         
+    }
+ 
+}
+
+namespace Khill\Lavacharts\Laravel { 
+
+    class LavachartsFacade {
+        
+        /**
+         * Create a new DataTable
+         * 
+         * If the additional DataTablePlus package is available, then one will
+         * be created, otherwise a standard DataTable is returned.
+         *
+         * @since 3.0.0
+         * @param string $timezone
+         * @return \Khill\Lavacharts\DataTables\DataTable 
+         * @static 
+         */ 
+        public static function DataTable($timezone = null)
+        {
+            return \Khill\Lavacharts\Lavacharts::DataTable($timezone);
+        }
+        
+        /**
+         * Create a new Dashboard
+         *
+         * @since 3.0.0
+         * @param string $label
+         * @return \Khill\Lavacharts\DataTables\DataTable 
+         * @static 
+         */ 
+        public static function Dashboard($label)
+        {
+            return \Khill\Lavacharts\Lavacharts::Dashboard($label);
+        }
+        
+        /**
+         * Create a new ControlWrapper from a Filter
+         *
+         * @since 3.0.0
+         * @uses \Khill\Lavacharts\Values\ElementId
+         * @param \Khill\Lavacharts\Dashboards\Filters\Filter $filter Filter to wrap
+         * @param string $elementId HTML element ID to output the control.
+         * @return \Khill\Lavacharts\Dashboards\ControlWrapper 
+         * @static 
+         */ 
+        public static function ControlWrapper($filter, $elementId)
+        {
+            return \Khill\Lavacharts\Lavacharts::ControlWrapper($filter, $elementId);
+        }
+        
+        /**
+         * Create a new ChartWrapper from a Chart
+         *
+         * @since 3.0.0
+         * @uses \Khill\Lavacharts\Values\ElementId
+         * @param \Khill\Lavacharts\Charts\Chart $chart Chart to wrap
+         * @param string $elementId HTML element ID to output the control.
+         * @return \Khill\Lavacharts\Dashboards\ChartWrapper 
+         * @static 
+         */ 
+        public static function ChartWrapper($chart, $elementId)
+        {
+            return \Khill\Lavacharts\Lavacharts::ChartWrapper($chart, $elementId);
+        }
+        
+        /**
+         * Renders Charts or Dashboards into the page
+         * 
+         * Given a type, label, and HTML element id, this will output
+         * all of the necessary javascript to generate the chart or dashboard.
+         *
+         * @access public
+         * @since 2.0.0
+         * @uses \Khill\Lavacharts\Values\Label
+         * @uses \Khill\Lavacharts\Values\ElementId
+         * @param string $type Type of object to render.
+         * @param string $label Label of the object to render.
+         * @param string $elementId HTML element id to render into.
+         * @param mixed $divDimensions Set true for div creation, or pass an array with height & width
+         * @return string 
+         * @static 
+         */ 
+        public static function render($type, $label, $elementId, $divDimensions = false)
+        {
+            return \Khill\Lavacharts\Lavacharts::render($type, $label, $elementId, $divDimensions);
+        }
+        
+        /**
+         * Outputs the link to the Google JSAPI
+         *
+         * @access public
+         * @since 2.3.0
+         * @return string Google Chart API and lava.js script blocks
+         * @static 
+         */ 
+        public static function jsapi()
+        {
+            return \Khill\Lavacharts\Lavacharts::jsapi();
+        }
+        
+        /**
+         * Checks to see if the given chart or dashboard exists in the volcano storage.
+         *
+         * @access public
+         * @since 2.4.2
+         * @uses \Khill\Lavacharts\Values\Label
+         * @param string $type Type of object to check.
+         * @param string $label Label of the object to check.
+         * @return boolean 
+         * @static 
+         */ 
+        public static function exists($type, $label)
+        {
+            return \Khill\Lavacharts\Lavacharts::exists($type, $label);
+        }
+        
+        /**
+         * Fetches an existing Chart or Dashboard from the volcano storage.
+         *
+         * @access public
+         * @since 3.0.0
+         * @uses \Khill\Lavacharts\Values\Label
+         * @param string $type Type of Chart or Dashboard.
+         * @param string $label Label of the Chart or Dashboard.
+         * @return mixed 
+         * @static 
+         */ 
+        public static function fetch($type, $label)
+        {
+            return \Khill\Lavacharts\Lavacharts::fetch($type, $label);
+        }
+        
+        /**
+         * Stores a existing Chart or Dashboard into the volcano storage.
+         *
+         * @access public
+         * @since 3.0.0
+         * @param \Khill\Lavacharts\Chart|\Khill\Lavacharts\Dashboard $lavaObj Chart or Dashboard.
+         * @return boolean 
+         * @static 
+         */ 
+        public static function store($lavaObj)
+        {
+            return \Khill\Lavacharts\Lavacharts::store($lavaObj);
         }
          
     }
@@ -15377,6 +15524,8 @@ namespace  {
     class Validator extends \Illuminate\Support\Facades\Validator {}
 
     class View extends \Illuminate\Support\Facades\View {}
+
+    class Lava extends \Khill\Lavacharts\Laravel\LavachartsFacade {}
 
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
  

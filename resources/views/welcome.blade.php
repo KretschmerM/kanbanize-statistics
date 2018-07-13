@@ -32,7 +32,7 @@
         <div class="col-md-12">
             <div class="panel panel-default" >
                 <div class="panel-heading " style="height: 31px">
-                    <a> Bug Statistik </a>
+                    <a> Bug Statistik Tabelle </a>
                     <span class="float-md-right">
                         <a href="/generate/50" class="btn btn-sm btn-info">
                             <span class="fas fa-sync-alt"></span></a>
@@ -68,11 +68,12 @@
         <div class="col-md-6">
             <div class="panel panel-default" >
                 <div class="panel-heading">
-                    Test
+                    Bug Statistik Graph
                 </div>
                 <div class="panel-body border">
-                    <br>
-                    <h1> Test </h1>
+                    <div id="temps_div">
+                        @linechart('Temps', 'temps_div')
+                    </div>
                 </div>
             </div>
         </div>

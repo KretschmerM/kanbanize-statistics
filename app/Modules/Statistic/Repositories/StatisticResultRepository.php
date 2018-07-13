@@ -124,8 +124,9 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                     'count' => $tableData->count,
                     'date' => $tableData->date
                 ];
-
         }
+
+
 
 //        dd($tableToday);
         return $tableToday;
@@ -156,9 +157,9 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         return $tableHeader;
     }
 
-    public function openStatisticOptions()
+    public function openStatisticOptions($options)
     {
-        // TODO: Implement openSettingsOnButtonClick() method.
+
     }
 
     public function saveStatisticOptions($data)

@@ -11,5 +11,6 @@ interface StatisticResultRepositoryContract
     public function getTableDataForToday();
     public function getTableHeader();
     public function saveStatisticOptions($data);
-    public function openStatisticOptions();
+    public function openStatisticOptions($options);
+
 }
