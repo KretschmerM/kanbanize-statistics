@@ -19,53 +19,53 @@
             <div class="form-group">
                 <label for="UserName" class="col-sm-2 control-label"> Name </label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" placeholder="Name" id="UserName" name="name" value="Max">
+                    <input type="text" class="form-control" placeholder="Name" id="UserName" name="name" value="{{ $fetchTableData['data']['name'] }}">
                 </div>
             </div>
             <div class="container">
-                <div>
+                <div class="form-group">
                     <div class="panel-heading" style="margin-top: 10px">
                         <a> Open </a>
                     </div>
                     <select class="custom-select" multiple="multiple" name="open[]" id="open">
-                        <option value="9"> Rückfragen Kunde </option>
-                        <option value="10"> Review </option>
-                        <option value="11"> Rückfragen Intern </option>
-                        <option value="12"> Doing </option>
-                        <option value="13"> Bug to Feature </option>
-                        <option value="14"> Open </option>
-                        <option value="15"> Done </option>
+                        @foreach($names as $name)
+                        @if (in_array($name->nameIntern, $fetchTableData['data']['open']))
+                        <option value="{{ $name->nameIntern }}" selected>{{$name->name}}</option>
+                        @else
+                        <option value="{{$name->nameIntern}}">{{$name->name}}</option>
+                        @endif
+                        @endforeach
                     </select>
                 </div>
-                <div>
+                <div class="form-group">
                     <div class="panel-heading" style="margin-top: 10px">
                         <a> Doing </a>
                     </div>
                     <select class="custom-select" multiple="multiple" name="doing[]" id="doing">
-                        <option value="9"> Rückfragen Kunde </option>
-                        <option value="10"> Review </option>
-                        <option value="11"> Rückfragen Intern </option>
-                        <option value="12"> Doing </option>
-                        <option value="13"> Bug to Feature </option>
-                        <option value="14"> Open </option>
-                        <option value="15"> Done </option>
+                        @foreach($names as $name)
+                        @if (in_array($name->nameIntern, $fetchTableData['data']['doing']))
+                        <option value="{{ $name->nameIntern }}" selected>{{$name->name}}</option>
+                        @else
+                        <option value="{{$name->nameIntern}}">{{$name->name}}</option>
+                        @endif
+                        @endforeach
                     </select>
                 </div>
-                <div>
+                <div class="form-group">
                     <div class="panel-heading" style="margin-top: 10px">
                         <a> Done </a>
                     </div>
                     <select class="custom-select" multiple="multiple" name="done[]" id="done">
-                        <option value="9"> Rückfragen Kunde </option>
-                        <option value="10"> Review </option>
-                        <option value="11"> Rückfragen Intern </option>
-                        <option value="12"> Doing </option>
-                        <option value="13"> Bug to Feature </option>
-                        <option value="14"> Open </option>
-                        <option value="15"> Done </option>
+                        @foreach($names as $name)
+                        @if (in_array($name->nameIntern, $fetchTableData['data']['done']))
+                        <option value="{{ $name->nameIntern }}" selected>{{$name->name}}</option>
+                        @else
+                        <option value="{{$name->nameIntern}}">{{$name->name}}</option>
+                        @endif
+                        @endforeach
                     </select>
                 </div>
-                <div>
+                <div class="form-group">
                     <div class="panel-heading" style="margin-top: 10px">
                         <a> Zeitraum </a>
                     </div>

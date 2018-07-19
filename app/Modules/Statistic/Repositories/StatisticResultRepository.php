@@ -15,6 +15,14 @@ use PhpParser\Node\Stmt\Foreach_;
 
 class StatisticResultRepository implements StatisticResultRepositoryContract
 {
+//    public function getTableHeader($boardId)
+//    {
+//        $client = new \GuzzleHttp\Client();
+//        $url  = env('KANBANIZE_URL') . "/api/kanbanize/get_board_structure/format/json";
+//
+//
+//    }
+
     /**
      * @param $boardId
      * @return mixed
@@ -157,9 +165,15 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         return $tableHeader;
     }
 
-    public function openStatisticOptions($options)
+    public function openStatisticOptions($options   )
     {
 
+
+//        dd($options);
+
+//        dd($options['data']['name']);
+
+        return $options;
     }
 
     public function saveStatisticOptions($data)

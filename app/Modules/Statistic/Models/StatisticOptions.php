@@ -21,4 +21,8 @@ class StatisticOptions extends Model
     ];
 
     public $timestamps = false;
+
+//    protected $casts = [
+//        'options' => 'json'
+//    ];
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Modules\Statistic\Contracts\StatisticResultRepositoryContract;
+use App\Modules\Statistic\Models\StatisticColumn;
 use App\Modules\Statistic\Models\StatisticOptions;
 use Illuminate\Http\Request;
 use Khill\Lavacharts\Laravel;
@@ -30,7 +31,6 @@ class AllController extends Controller
      */
     public function index()
     {
-
         // load options
 
         // $period = zeitraum aus options
@@ -76,20 +76,39 @@ class AllController extends Controller
 
     public function openSettingsOnButtonClick()
     {
-        $options = StatisticOptions::all();
+//        return view('settings');
+
+        $data  = StatisticOptions::firstOrFail()->options;
+        $names = StatisticColumn::getQuery()->where('boardId','=',50)->orderBy('name','ASC')->get();
+
+        $options = json_decode($data, true);
 
         $fetchTableData = $this->statisticResultRepository->openStatisticOptions($options);
 
-        return view('settings');
+      //  dd($fetchTableData['data']['open'], $names);
+
+        return view('settings', compact('fetchTableData', 'names'));
     }
 
     public function saveSettingsOnButtonClick()
     {
+        $data = StatisticOptions::firstOrFail()->options;
+
+        $names = StatisticColumn::all();
+
+        $options = json_decode($data, true);
+
+        $fetchTableData = $this->statisticResultRepository->openStatisticOptions($options);
+
+
+
         $data = request()->all();
 
         $saveTableData = $this->statisticResultRepository->saveStatisticOptions($data);
 
-        return view('settings');
+        return view('settings', compact('fetchTableData', 'names'));
+
+//        return view('settings');
     }
 
     private function buildLineChart()
