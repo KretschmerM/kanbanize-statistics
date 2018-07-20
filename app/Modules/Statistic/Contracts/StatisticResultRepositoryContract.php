@@ -10,7 +10,8 @@ interface StatisticResultRepositoryContract
     public function findResultByBoardId($boardId);
     public function getTableDataForToday();
     public function getTableHeader();
-    public function saveStatisticOptions($data);
-    public function openStatisticOptions($options);
-
+    public function saveStatisticOptions($settingId,$data);
+    public function openStatisticOptions($settingId);
+    public function getStatisticPeriod();
+    public function getKanbanizeBoards();
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Modules\Statistic\Repositories;
 
 use App\Modules;
@@ -36,7 +37,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         }
 
         $client = new \GuzzleHttp\Client();
-        $url  = env('KANBANIZE_URL') . "/api/kanbanize/get_all_tasks/format/json/";
+        $url = env('KANBANIZE_URL') . "/api/kanbanize/get_all_tasks/format/json/";
 
         $response = $client->request("POST", $url,
             [
@@ -127,13 +128,12 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
         foreach ($getData as $tableData) {
 
-                $tableToday[$tableData->date][] = [
-                    'name' => $tableData->name,
-                    'count' => $tableData->count,
-                    'date' => $tableData->date
-                ];
+            $tableToday[$tableData->date][] = [
+                'name' => $tableData->name,
+                'count' => $tableData->count,
+                'date' => $tableData->date
+            ];
         }
-
 
 
 //        dd($tableToday);
@@ -159,35 +159,90 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
             if (!isset($tableHeader[$header->name])) {
                 $tableHeader[$header->name] = [
-                    'name' => $header->name];
+                    'name' => $header->name
+                ];
             }
         }
         return $tableHeader;
     }
 
-    public function openStatisticOptions($options   )
+    public function openStatisticOptions($settingId)
     {
+        $dataSeleced = $options = [];
+        try {
+            $data = StatisticOptions::getQuery()->where('settingId', '=', $settingId)->first();
+            $dataResult = json_decode($data->options, true);
+            $dataSeleced = $dataResult['data'];
+        } catch (\Exception $es) {
+        }
 
-
-//        dd($options);
-
-//        dd($options['data']['name']);
+        $options['data'] = [
+            'name' => $dataSeleced['name'] ?? '',
+            'open' => $dataSeleced['open'] ?? [],
+            'doing' => $dataSeleced['doing'] ?? [],
+            'done' => $dataSeleced['done'] ?? [],
+            'boardId' => $dataSeleced['boardId'] ?? 0,
+            'time' => $dataSeleced['time'] ?? '',
+        ];
 
         return $options;
     }
 
-    public function saveStatisticOptions($data)
+    public function saveStatisticOptions($settingId, $data)
     {
         $options['data'] = [
             'name' => $data['name'] ?? '',
             'open' => $data['open'] ?? [],
             'doing' => $data['doing'] ?? [],
             'done' => $data['done'] ?? [],
-            'time' => $data['time'] ?? [],
+            'boardId' => $data['boardId'] ?? 0,
+            'time' => $data['time'] ?? '',
         ];
 
-            $json = json_encode($options);
 
-        $options =  StatisticOptions::updateOrCreate(['boardId' => 50], ['options' => $json]);
+        $json = json_encode($options);
+
+        StatisticOptions::updateOrCreate(['settingId' => $settingId], ['boardId' => $options['data']['boardId'],'options' => $json]);
     }
+
+    public function getStatisticPeriod()
+    {
+
+
+        return [
+            StatisticOptions::PERIOD_LIVE => 'today',
+            StatisticOptions::PERIOD_LAST_WEEK => 'week',
+            StatisticOptions::PERIOD_LAST_MONTH => 'month',
+            StatisticOptions::PERIOD_LAST_YEAR => 'year',
+        ];
+    }
+
+    public function getKanbanizeBoards()
+    {
+        $client = new \GuzzleHttp\Client();
+        $url = env('KANBANIZE_URL') . "/api/kanbanize/get_projects_and_boards/format/json/";
+
+        $response = $client->request("POST", $url,
+            [
+                'headers' => [
+                    'apikey' => env('KANBANIZE_KEY'),
+                    'content-type' => 'application/json'
+                ],
+            ]);
+
+        $body = $response->getBody();
+
+        $data = \GuzzleHttp\json_decode($body);
+
+        $boards = [];
+
+        foreach ($data->projects as $project) {
+            foreach ($project->boards as $board) {
+                $boards[$board->id] = '(' . $project->name . ') ' . $board->name;
+            }
+        }
+
+        return $boards;
+    }
+
 }

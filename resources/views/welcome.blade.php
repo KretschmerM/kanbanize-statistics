@@ -36,6 +36,7 @@
                     <span class="float-md-right">
                         <a href="/generate/50" class="btn btn-sm btn-info">
                             <span class="fas fa-sync-alt"></span></a>
+                        <a class="btn btn-sm btn-info" href="/settings/1" style="margin-right: 5px"><span class="fas fa-cog"></span></a>
                      </span>
                 </div>
                 <div class="table-responsive">
@@ -69,6 +70,9 @@
             <div class="panel panel-default" >
                 <div class="panel-heading">
                     Bug Statistik Graph
+                    <span class="float-md-right">
+                        <a class="btn btn-sm btn-info" href="/settings/2" style="margin-right: 5px"><span class="fas fa-cog"></span></a>
+                     </span>
                 </div>
                 <div class="panel-body border">
                     <div id="temps_div">
