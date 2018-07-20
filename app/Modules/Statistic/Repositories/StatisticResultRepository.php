@@ -10,8 +10,6 @@ use App\Modules\Statistic\Models\StatisticOptions;
 use App\Modules\Statistic\Models\StatisticAmount;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Monolog\Handler\StreamHandler;
-use PhpParser\Node\Stmt\Foreach_;
 
 
 class StatisticResultRepository implements StatisticResultRepositoryContract
@@ -135,8 +133,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ];
         }
 
-
-//        dd($tableToday);
         return $tableToday;
     }
 
@@ -152,8 +148,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ->get();
 
         $tableHeader = [];
-
-//        dd($getData);
 
         foreach ($getData as $header) {
 
@@ -176,6 +170,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         } catch (\Exception $es) {
         }
 
+
         $options['data'] = [
             'name' => $dataSeleced['name'] ?? '',
             'open' => $dataSeleced['open'] ?? [],
@@ -183,6 +178,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             'done' => $dataSeleced['done'] ?? [],
             'boardId' => $dataSeleced['boardId'] ?? 0,
             'time' => $dataSeleced['time'] ?? '',
+            'variation' => $dataSeleced['variation'] ?? 0,
         ];
 
         return $options;
@@ -190,6 +186,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
     public function saveStatisticOptions($settingId, $data)
     {
+
         $options['data'] = [
             'name' => $data['name'] ?? '',
             'open' => $data['open'] ?? [],
@@ -197,23 +194,33 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             'done' => $data['done'] ?? [],
             'boardId' => $data['boardId'] ?? 0,
             'time' => $data['time'] ?? '',
+            'variation' => $data['variation'] ?? 0,
+
         ];
 
 
         $json = json_encode($options);
 
-        StatisticOptions::updateOrCreate(['settingId' => $settingId], ['boardId' => $options['data']['boardId'],'options' => $json]);
+        StatisticOptions::updateOrCreate(['settingId' => $settingId],
+            ['boardId' => $options['data']['boardId'], 'options' => $json]);
     }
 
     public function getStatisticPeriod()
     {
-
-
         return [
             StatisticOptions::PERIOD_LIVE => 'today',
             StatisticOptions::PERIOD_LAST_WEEK => 'week',
             StatisticOptions::PERIOD_LAST_MONTH => 'month',
             StatisticOptions::PERIOD_LAST_YEAR => 'year',
+        ];
+    }
+
+    public function getStatisticVariation()
+    {
+        return [
+            StatisticOptions::STATISTIC_TABLE => 'table',
+            StatisticOptions::STATISTIC_LINE_CHART => 'lineChart',
+            StatisticOptions::STATISTIC_PIE_CHART => 'pieChart',
         ];
     }
 
@@ -245,4 +252,10 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         return $boards;
     }
 
+    public function getKanbanizeDataForEachBoard()
+    {
+        foreach ($this->getKanbanizeBoards() as $boardId => $boardName) {
+            $this->findResultByBoardId($boardId);
+        }
+    }
 }

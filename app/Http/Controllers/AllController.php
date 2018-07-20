@@ -57,9 +57,11 @@ class AllController extends Controller
 
         $line = $this->buildLineChart();
 
+        $statisticLine = $this->buildStatisticLineChart();
+
 //        return view('welcome', ['statistic' => $statistic, 'header' => $header]);
 
-        return view('welcome', compact('statistic', 'headers', 'line'));
+        return view('welcome', compact('statistic', 'headers', 'line', 'statisticLine'));
     }
 
     /**
@@ -69,30 +71,37 @@ class AllController extends Controller
      */
     public function loadDataOnButtonClick()
     {
-        $getBoardData = $this->statisticResultRepository->findResultByBoardId($boardId);
+        $this->statisticResultRepository->getKanbanizeDataForEachBoard();
 
         return $this->index();
     }
 
     public function openSettingsOnButtonClick($settingId)
     {
-        $fetchTableData   = $this->statisticResultRepository->openStatisticOptions($settingId);
+        $fetchTableData = $this->statisticResultRepository->openStatisticOptions($settingId);
 
-        $names = StatisticColumn::getQuery()->where('boardId','=', (INT) $fetchTableData['data']['boardId'])->orderBy('name','ASC')->get();
+//        dd($fetchTableData);
+
+        $names = StatisticColumn::getQuery()->where('boardId', '=',
+            (INT)$fetchTableData['data']['boardId'])->orderBy('name', 'ASC')->get();
 
         $periodSelection = $this->statisticResultRepository->getStatisticPeriod();
 
+        $variationSelection = $this->statisticResultRepository->getStatisticVariation();
+
         $boardIds = $this->statisticResultRepository->getKanbanizeBoards();
 
-        return view('settings', compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId'));
+        return view('settings', compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection'));
     }
 
     public function saveSettingsOnButtonClick($settingId)
     {
         $request = request()->all();
-        if($settingId)
-        {
-            $this->statisticResultRepository->saveStatisticOptions($settingId,$request);
+
+//        dd($request);
+
+        if ($settingId) {
+            $this->statisticResultRepository->saveStatisticOptions($settingId, $request);
         }
         return $this->openSettingsOnButtonClick($settingId);
     }
@@ -105,15 +114,15 @@ class AllController extends Controller
             ->addNumberColumn('Max Temp')
             ->addNumberColumn('Mean Temp')
             ->addNumberColumn('Min Temp')
-            ->addRow(['2014-10-1',  67, 65, 62])
-            ->addRow(['2014-10-2',  68, 65, 61])
-            ->addRow(['2014-10-3',  68, 62, 55])
-            ->addRow(['2014-10-4',  72, 62, 52])
-            ->addRow(['2014-10-5',  61, 54, 47])
-            ->addRow(['2014-10-6',  70, 58, 45])
-            ->addRow(['2014-10-7',  74, 70, 65])
-            ->addRow(['2014-10-8',  75, 69, 62])
-            ->addRow(['2014-10-9',  69, 63, 56])
+            ->addRow(['2014-10-1', 67, 65, 62])
+            ->addRow(['2014-10-2', 68, 65, 61])
+            ->addRow(['2014-10-3', 68, 62, 55])
+            ->addRow(['2014-10-4', 72, 62, 52])
+            ->addRow(['2014-10-5', 61, 54, 47])
+            ->addRow(['2014-10-6', 70, 58, 45])
+            ->addRow(['2014-10-7', 74, 70, 65])
+            ->addRow(['2014-10-8', 75, 69, 62])
+            ->addRow(['2014-10-9', 69, 63, 56])
             ->addRow(['2014-10-10', 64, 58, 52])
             ->addRow(['2014-10-11', 59, 55, 50])
             ->addRow(['2014-10-12', 65, 56, 46])
@@ -123,15 +132,15 @@ class AllController extends Controller
             ->addRow(['2014-10-16', 71, 66, 60])
             ->addRow(['2014-10-17', 72, 66, 60])
             ->addRow(['2014-10-18', 63, 62, 62])
-            ->addRow(['2015-10-1',  67, 65, 62])
-            ->addRow(['2015-10-2',  68, 65, 61])
-            ->addRow(['2015-10-3',  68, 62, 55])
-            ->addRow(['2015-10-4',  72, 62, 52])
-            ->addRow(['2015-10-5',  61, 54, 47])
-            ->addRow(['2015-10-6',  70, 58, 45])
-            ->addRow(['2015-10-7',  74, 70, 65])
-            ->addRow(['2015-10-8',  75, 69, 62])
-            ->addRow(['2015-10-9',  69, 63, 56])
+            ->addRow(['2015-10-1', 67, 65, 62])
+            ->addRow(['2015-10-2', 68, 65, 61])
+            ->addRow(['2015-10-3', 68, 62, 55])
+            ->addRow(['2015-10-4', 72, 62, 52])
+            ->addRow(['2015-10-5', 61, 54, 47])
+            ->addRow(['2015-10-6', 70, 58, 45])
+            ->addRow(['2015-10-7', 74, 70, 65])
+            ->addRow(['2015-10-8', 75, 69, 62])
+            ->addRow(['2015-10-9', 69, 63, 56])
             ->addRow(['2015-10-10', 64, 58, 52])
             ->addRow(['2015-10-11', 59, 55, 50])
             ->addRow(['2015-10-12', 65, 56, 46])
@@ -145,6 +154,19 @@ class AllController extends Controller
         Lava::LineChart('Temps', $temperatures, [
             'title' => 'Weather in October'
         ]);
+    }
+
+    private function buildStatisticLineChart()
+    {
+        $statisticline = Lava::DataTable();
+
+        $statisticline->addDateColumn('Date')
+            ->addNumberColumn('open')
+            ->addNumberColumn('doing')
+            ->addNumberColumn('done');
+
+//        foreach ()
+
     }
 
 }

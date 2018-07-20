@@ -37,6 +37,7 @@
                         @endforeach
                     </select>
                     @else
+                    <input type="hidden" value="{{ $fetchTableData['data']['boardId'] }}">
                     <a>{{$boardIds[$fetchTableData['data']['boardId']]}}</a>
                 </div>
                 @endIf
@@ -105,7 +106,7 @@
                 <div class="panel-heading" style="margin-top: 10px">
                     <a> Variation </a>
                 </div>
-                <select class="custom-select" name="time" id="time">
+                <select class="custom-select" name="variation" id="variation">
                     @foreach($variationSelection as $variation => $displayName)
                     @if ($variation === $fetchTableData['data']['variation'])
                     <option value="{{ $variation }}" selected> {{$displayName}}</option>

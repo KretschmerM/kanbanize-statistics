@@ -27,7 +27,7 @@ class StatisticOptions extends Model
     const PERIOD_LAST_YEAR = 'year';
 
     const STATISTIC_TABLE = 'table';
-    const STATISTIC_LINECHART = 'lineChart';
+    const STATISTIC_LINE_CHART = 'lineChart';
     const STATISTIC_PIE_CHART = 'pieChart';
 
     public $timestamps = false;
