@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $count
  * @property string $user
  */
-
-
 class StatisticAmount extends Model
 {
     protected $table = 'kanbanize_statistic_amount';
@@ -24,6 +22,7 @@ class StatisticAmount extends Model
     {
         return $this->belongsTo(Statistic::class, 'id', 'mainId');
     }
+
     public function summarynames()
     {
         return $this->belongsTo(StatisticColumn::class, 'id', 'columnId');

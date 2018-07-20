@@ -23,7 +23,7 @@ class Statistic extends Model
 
     public function options()
     {
-        return $this->hasOne(StatisticOptions::class,'boardId', 'id');
+        return $this->hasOne(StatisticOptions::class, 'boardId', 'id');
     }
 
     protected $casts = [

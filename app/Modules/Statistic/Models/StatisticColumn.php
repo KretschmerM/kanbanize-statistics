@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $nameIntern
  */
-
 class StatisticColumn extends Model
 {
     protected $table = 'kanbanize_statistic_column';
