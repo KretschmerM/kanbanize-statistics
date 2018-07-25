@@ -37,9 +37,7 @@
                 <div class="panel-heading " style="height: 31px">
                     <a> Bug Statistik Tabelle </a>
                     <span class="float-md-right">
-                        <a href="/generate/50" class="btn btn-sm btn-info">
-                            <span class="fas fa-sync-alt"></span></a>
-                        <a class="btn btn-sm btn-info" href="/settings/1" style="margin-right: 5px"><span
+                        <a class="btn btn-sm btn-info" href="/settings/1"><span
                                 class="fas fa-cog"></span></a>
                      </span>
                 </div>
@@ -72,10 +70,10 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div class="panel-heading" style="height: 31px">
                     Bug Statistik Graph
                     <span class="float-md-right">
-                        <a class="btn btn-sm btn-info" href="/settings/2" style="margin-right: 5px"><span
+                        <a class="btn btn-sm btn-info" href="/settings/2"><span
                                 class="fas fa-cog"></span></a>
                      </span>
                 </div>
@@ -88,12 +86,17 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    Test
+                <div class="panel-heading" style="height: 31px">
+                    Bug Statistik Graph
+                    <span class="float-md-right">
+                        <a class="btn btn-sm btn-info" href="/settings/3"><span
+                                class="fas fa-cog"></span></a>
+                     </span>
                 </div>
                 <div class="panel-body border">
-                    <br>
-                    <h1> Test </h1>
+                    <div id="test_div">
+                        @linechart('hi', 'test_div')
+                    </div>
                 </div>
             </div>
         </div>
@@ -102,23 +105,32 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    Test
+                <div class="panel-heading" style="height: 31px">
+                    Bug Statistik Graph
+                    <span class="float-md-right">
+                        <a class="btn btn-sm btn-info" href="/settings/4"><span
+                                class="fas fa-cog"></span></a>
+                     </span>
                 </div>
                 <div class="panel-body border">
-                    <br>
-                    <h1> Test </h1>
+                    <div id="chart-div">
+                        @piechart('Test', 'chart-div')
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    Test
+                <div class="panel-heading" style="height: 31px">
+                    Bug Statistik Graph
+                    <span class="float-md-right">
+                        <a class="btn btn-sm btn-info" href="/settings/5"><span
+                                class="fas fa-cog"></span></a>
+                     </span>
                 </div>
                 <div class="panel-body border">
                     <br>
-                    <h1> Test </h1>
+                    <h1>  </h1>
                 </div>
             </div>
         </div>

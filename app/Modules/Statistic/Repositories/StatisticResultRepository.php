@@ -30,7 +30,8 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
     public function findResultByBoardId($boardId)
     {
 
-        if (Modules\Statistic\Models\Statistic::query()->where('date', '=', date('Y-m-d'))->count()) {
+        if (Modules\Statistic\Models\Statistic::query()->where('date', '=', date('Y-m-d'))
+            ->where('boardId', '=', $boardId)->count()) {
             return null;
         }
 
@@ -87,7 +88,8 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
             $statisticColumn = StatisticColumn::firstOrCreate(
                 ['nameIntern' => $column['nameIntern']],
-                ['name' => $column['name']]);
+                ['name' => $column['name']]
+            );
 
             foreach ($column['reporter'] as $reporter) {
 
@@ -254,8 +256,17 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
     public function getKanbanizeDataForEachBoard()
     {
+        $boardIds = [];
         foreach ($this->getKanbanizeBoards() as $boardId => $boardName) {
-            $this->findResultByBoardId($boardId);
+            try {
+                $boardIds[] = $this->findResultByBoardId($boardId);
+            } catch (\GuzzleHttp\Exception\ClientException $exception) {
+                if ($exception->getResponse()->getStatusCode() == 401) {
+
+                } else {
+                    throw $exception;
+                }
+            }
         }
     }
 }

@@ -6,9 +6,11 @@ use App\Http\Requests;
 use App\Modules\Statistic\Contracts\StatisticResultRepositoryContract;
 use App\Modules\Statistic\Models\StatisticColumn;
 use App\Modules\Statistic\Models\StatisticOptions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Khill\Lavacharts\Laravel;
 use Khill\Lavacharts\Lavacharts;
+use Khill\Lavacharts\Options;
 use Lava;
 
 class AllController extends Controller
@@ -57,11 +59,13 @@ class AllController extends Controller
 
         $line = $this->buildLineChart();
 
-        $statisticLine = $this->buildStatisticLineChart();
+        $statisticLineChart = $this->buildStatisticLineChart();
+
+        $statisticPieChart = $this->buildStatisticPieChart();
 
 //        return view('welcome', ['statistic' => $statistic, 'header' => $header]);
 
-        return view('welcome', compact('statistic', 'headers', 'line', 'statisticLine'));
+        return view('welcome', compact('statistic', 'headers', 'line', 'statisticLineChart', 'statisticPieChart'));
     }
 
     /**
@@ -91,7 +95,8 @@ class AllController extends Controller
 
         $boardIds = $this->statisticResultRepository->getKanbanizeBoards();
 
-        return view('settings', compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection'));
+        return view('settings',
+            compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection'));
     }
 
     public function saveSettingsOnButtonClick($settingId)
@@ -131,25 +136,7 @@ class AllController extends Controller
             ->addRow(['2014-10-15', 76, 72, 68])
             ->addRow(['2014-10-16', 71, 66, 60])
             ->addRow(['2014-10-17', 72, 66, 60])
-            ->addRow(['2014-10-18', 63, 62, 62])
-            ->addRow(['2015-10-1', 67, 65, 62])
-            ->addRow(['2015-10-2', 68, 65, 61])
-            ->addRow(['2015-10-3', 68, 62, 55])
-            ->addRow(['2015-10-4', 72, 62, 52])
-            ->addRow(['2015-10-5', 61, 54, 47])
-            ->addRow(['2015-10-6', 70, 58, 45])
-            ->addRow(['2015-10-7', 74, 70, 65])
-            ->addRow(['2015-10-8', 75, 69, 62])
-            ->addRow(['2015-10-9', 69, 63, 56])
-            ->addRow(['2015-10-10', 64, 58, 52])
-            ->addRow(['2015-10-11', 59, 55, 50])
-            ->addRow(['2015-10-12', 65, 56, 46])
-            ->addRow(['2015-10-13', 66, 56, 46])
-            ->addRow(['2015-10-14', 75, 70, 64])
-            ->addRow(['2015-10-15', 76, 72, 68])
-            ->addRow(['2015-10-16', 71, 66, 60])
-            ->addRow(['2015-10-17', 72, 66, 60])
-            ->addRow(['2015-10-18', 63, 62, 62]);
+            ->addRow(['2014-10-18', 63, 62, 62]);
 
         Lava::LineChart('Temps', $temperatures, [
             'title' => 'Weather in October'
@@ -158,15 +145,61 @@ class AllController extends Controller
 
     private function buildStatisticLineChart()
     {
-        $statisticline = Lava::DataTable();
+        $statisticLineChart = Lava::DataTable();
 
-        $statisticline->addDateColumn('Date')
+        $period = [Carbon::today()->subWeek()->toDateString(), Carbon::today()->toDateString()];
+
+        $open = 40;
+        $doing = 50;
+        $done = 35;
+
+        $statisticLineChart->addDateColumn('Date')
             ->addNumberColumn('open')
             ->addNumberColumn('doing')
             ->addNumberColumn('done');
 
-//        foreach ()
+        foreach ($period as $column) {
+            $statisticLineChart->addRow([$column, $open = $open + 10, $doing = $doing + 12, $done = $done + 16]);
+        }
 
+        Lava::LineChart('hi', $statisticLineChart, [
+            'title' => 'test'
+        ]);
     }
 
+    private function buildStatisticPieChart()
+    {
+        $statisticPieChart = Lava::DataTable();
+
+        $values = [
+            'open' => 50,
+            'doing' => 40,
+            'done' => 30
+        ];
+
+        $sum = array_sum($values);
+
+        $chart = [
+            'open' => $values['open'] / $sum,
+            'doing' => $values['doing'] / $sum,
+            'done' => $values['done'] / $sum
+        ];
+
+
+        $statisticPieChart->addStringColumn('Statistic')
+            ->addNumberColumn('Percent')
+            ->addRow(['open', $chart['open']])
+            ->addRow(['doing', $chart['doing']])
+            ->addRow(['done', $chart['done']]);
+
+        Lava::PieChart('Test', $statisticPieChart, [
+            'title'  => 'Test',
+            'is3D'   => true,
+//            'slices' => [
+//                ['offset' => 0.1],
+//                ['offset' => 0.1],
+//                ['offset' => 0.1]
+//            ]
+        ]);
+    }
 }

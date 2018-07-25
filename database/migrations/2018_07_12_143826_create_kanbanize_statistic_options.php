@@ -17,6 +17,8 @@ class CreateKanbanizeStatisticOptions extends Migration
             $table->increments('id');
             $table->integer('boardId')->unique();
             $table->text('options');
+            $table->integer('settingId');
+            $table->string('statisticVariation');
         });
     }
 
