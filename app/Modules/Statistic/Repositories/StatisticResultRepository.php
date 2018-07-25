@@ -14,14 +14,6 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticResultRepository implements StatisticResultRepositoryContract
 {
-//    public function getTableHeader($boardId)
-//    {
-//        $client = new \GuzzleHttp\Client();
-//        $url  = env('KANBANIZE_URL') . "/api/kanbanize/get_board_structure/format/json";
-//
-//
-//    }
-
     /**
      * @param $boardId
      * @return mixed
@@ -86,10 +78,11 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
         foreach ($optimize as $column) {
 
-            $statisticColumn = StatisticColumn::firstOrCreate(
-                ['nameIntern' => $column['nameIntern']],
-                ['name' => $column['name']]
-            );
+            $statisticColumn = StatisticColumn::updateOrCreate([
+                'nameIntern' => $column['nameIntern'],
+                'name' => $column['name'],
+                'boardId' => $boardId
+            ]);
 
             foreach ($column['reporter'] as $reporter) {
 

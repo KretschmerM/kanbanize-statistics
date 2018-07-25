@@ -12,7 +12,7 @@ class StatisticRouteServiceProvider extends RouteServiceProvider
         $router->group(['namespace' => '\App\Modules\Statistic\Controllers', 'middleware' => 'web'],
             function(Router $router)
             {
-                $router->get('/statistic/generate/{boardId}', 'StatisticResultController@loadDataOnButtonClick');
+                $router->get('/statistic/generate', 'StatisticResultController@loadDataOnButtonClick');
             }
         );
 

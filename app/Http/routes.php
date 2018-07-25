@@ -10,7 +10,7 @@
 |
 */
 Route::get('/'          ,'AllController@index');
-Route::get('/generate/{boardId}' ,'AllController@loadDataOnButtonClick');
+Route::get('/generate' ,'AllController@loadDataOnButtonClick');
 Route::get('/settings/{settingId}', 'AllController@openSettingsOnButtonClick');
 Route::post('/settings/{settingId}', 'AllController@saveSettingsOnButtonClick');
 

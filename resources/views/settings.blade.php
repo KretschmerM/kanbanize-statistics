@@ -29,7 +29,7 @@
                 <div class="col-sm-10">
                     <div class="panel-heading" style="margin-top: 10px">
                         <a> Board: </a>
-                        @if (isset($fetchTableData['data']['boardId']) && $fetchTableData['data']['boardId'] <= 0)
+                    @if (isset($fetchTableData['data']['boardId']) && $fetchTableData['data']['boardId'] <= 0)
                     </div>
                     <select class="custom-select" name="boardId" id="boardId">
                         @foreach($boardIds as $boardId => $displayName)
@@ -37,10 +37,10 @@
                         @endforeach
                     </select>
                     @else
-                    <input type="hidden" value="{{ $fetchTableData['data']['boardId'] }}">
+                    <input type="hidden" name="boardId" value="{{ $fetchTableData['data']['boardId'] }}">
                     <a>{{$boardIds[$fetchTableData['data']['boardId']]}}</a>
                 </div>
-                @endIf
+                    @endIf
 
             </div>
         </div>

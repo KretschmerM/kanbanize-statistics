@@ -111,7 +111,7 @@ class AllController extends Controller
         return $this->openSettingsOnButtonClick($settingId);
     }
 
-    private function buildLineChart()
+    private function buildLineChart() // TODO löschen
     {
         $temperatures = Lava::DataTable();
 

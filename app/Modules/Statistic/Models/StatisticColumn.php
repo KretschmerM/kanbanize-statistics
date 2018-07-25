@@ -24,6 +24,7 @@ class StatisticColumn extends Model
     protected $fillable = [
         'name',
         'nameIntern',
+        'boardId'
     ];
 
     public $timestamps = false;
