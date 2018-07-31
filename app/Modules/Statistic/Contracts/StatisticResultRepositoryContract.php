@@ -25,4 +25,8 @@ interface StatisticResultRepositoryContract
     public function getKanbanizeBoards();
 
     public function getKanbanizeDataForEachBoard();
+
+    public function getTimePeriodForEachStatistic();
+
+    public function getDataForStatistic($boardId, $from, $to);
 }

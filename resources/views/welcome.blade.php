@@ -18,11 +18,6 @@
         text-align: center;
     }
 </style>
-<style>
-    .table {
-        color: white;
-    }
-</style>
 
 <head>
     <title>project</title>
@@ -35,34 +30,13 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading " style="height: 31px">
-                    <a> Bug Statistik Tabelle </a>
+                    <a> Statistik </a>
                     <span class="float-md-right">
                         <a class="btn btn-sm btn-info" href="/settings/1"><span
                                 class="fas fa-cog"></span></a>
                      </span>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-striped border">
-                        <thead>
-                        <tr style="background-color: #0069d9">
-                            <th> Datum</th>
-                            @foreach ($headers as $header)
-                            <th> {{ $header['name'] }}</th>
-                            @endforeach
-                        </tr>
-                        </thead>
-                        <tbody style="color: black">
-                        @foreach ($statistic as $date => $columns)
-                        <tr>
-                            <td> {{ $date }}</td>
-                            @foreach ($columns as $column)
-                            <td> {{ $column['count'] }}</td>
-                            @endforeach
-                        </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+
             </div>
         </div>
     </div>
@@ -71,23 +45,23 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading" style="height: 31px">
-                    Bug Statistik Graph
+                    Statistik
                     <span class="float-md-right">
                         <a class="btn btn-sm btn-info" href="/settings/2"><span
                                 class="fas fa-cog"></span></a>
                      </span>
                 </div>
                 <div class="panel-body border">
-                    <div id="temps_div">
-                        @linechart('Temps', 'temps_div')
-                    </div>
+
+
+
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading" style="height: 31px">
-                    Bug Statistik Graph
+                    Statistik
                     <span class="float-md-right">
                         <a class="btn btn-sm btn-info" href="/settings/3"><span
                                 class="fas fa-cog"></span></a>
@@ -106,7 +80,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading" style="height: 31px">
-                    Bug Statistik Graph
+                    Statistik
                     <span class="float-md-right">
                         <a class="btn btn-sm btn-info" href="/settings/4"><span
                                 class="fas fa-cog"></span></a>
@@ -122,7 +96,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading" style="height: 31px">
-                    Bug Statistik Graph
+                    Statistik
                     <span class="float-md-right">
                         <a class="btn btn-sm btn-info" href="/settings/5"><span
                                 class="fas fa-cog"></span></a>

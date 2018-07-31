@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticResultRepository implements StatisticResultRepositoryContract
 {
+
+//    private $cacheBoardIds = [];
+
     /**
      * @param $boardId
      * @return mixed
@@ -133,7 +136,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
     public function getTableHeader()
     {
-        $getData = $getData = DB::table('kanbanize_statistic_main')
+        $getData = DB::table('kanbanize_statistic_main')
             ->whereBetween('date', [Carbon::today()->subWeek()->toDateString(), Carbon::today()->toDateString()])
             ->select([
                 'name'
@@ -261,5 +264,105 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                 }
             }
         }
+    }
+
+    public function getTimePeriodForEachStatistic()
+    {
+        $options = StatisticOptions::getQuery()->select('settingId', 'options', 'boardId')->get();
+        foreach ($options as $option) {
+            $statistic = \GuzzleHttp\json_decode($option->options, 'true');
+            switch ($statistic['data']['time']) {
+                case $statistic['data']['time'] === 'year':
+
+                    $from = Carbon::today()->subYear()->toDateString();
+                    $to = Carbon::today()->toDateString();
+
+                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+
+                    break;
+
+                case $statistic['data']['time'] === 'month':
+
+                    $from = Carbon::today()->subMonth()->toDateString();
+                    $to = Carbon::today()->toDateString();
+
+                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+
+                    break;
+
+                case $statistic['data']['time'] === 'week':
+
+                    $from = Carbon::today()->subWeek()->toDateString();
+                    $to = Carbon::today()->toDateString();
+
+                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+
+                    break;
+
+                case $statistic['data']['time'] === 'live':
+
+                    $from = Carbon::today()->toDateString();
+                    $to = Carbon::today()->toDateString();
+
+                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+
+                    break;
+            }
+        }
+        return $date;
+    }
+
+    public function getDataForStatistic($boardId, $from, $to)
+    {
+//        if (array_key_exists($boardId, $this->cacheBoardIds)) {
+//            return $this->cacheBoardIds[$boardId];
+//        }
+
+        $getData = DB::table('kanbanize_statistic_main')
+            ->whereBetween('date', [$from, $to])
+            ->where('kanbanize_statistic_main.boardId', '=', $boardId)
+            ->select([
+                'nameIntern',
+                'date',
+                \DB::raw('SUM(kanbanize_statistic_amount.count) as count'),
+
+            ])->distinct()
+            ->leftJoin('kanbanize_statistic_amount', 'mainId', '=', 'kanbanize_statistic_main.id')
+            ->leftJoin('kanbanize_statistic_column', 'columnId', '=', 'kanbanize_statistic_column.id')
+            ->groupBy('columnId', 'date')
+            ->get();
+
+//        $this->cacheBoardIds[$boardId] = $getData;
+
+        return $getData;
+    }
+
+    protected function buildDataArray($from, $to, $statistic, $boardId)
+    {
+        $date = [];
+
+        $amount = $this->getDataForStatistic($boardId, $from, $to);
+
+        foreach ($amount as $count) {
+
+            if (!array_key_exists($count->date, $date)) {
+                $date[$count->date] = [
+                    'open' => 0,
+                    'doing' => 0,
+                    'done' => 0,
+                ];
+            }
+
+            if (in_array($count->nameIntern, $statistic['data']['open'])) {
+                $date[$count->date]['open'] += (int)$count->count;
+            }
+            if (in_array($count->nameIntern, $statistic['data']['doing'])) {
+                $date[$count->date]['doing'] += (int)$count->count;
+            }
+            if (in_array($count->nameIntern, $statistic['data']['done'])) {
+                $date[$count->date]['done'] += (int)$count->count;
+            }
+        }
+        return $date;
     }
 }

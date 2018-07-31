@@ -57,13 +57,17 @@ class AllController extends Controller
 
         $headers = $this->statisticResultRepository->getTableHeader();
 
-        $line = $this->buildLineChart();
+        $data = $this->statisticResultRepository->getTimePeriodForEachStatistic();
 
-        $statisticLineChart = $this->buildStatisticLineChart();
+        $statisticLineChart = $this->buildStatisticLineChart($data);
 
         $statisticPieChart = $this->buildStatisticPieChart();
 
+
+
 //        return view('welcome', ['statistic' => $statistic, 'header' => $header]);
+
+//        dd($getPeriod);
 
         return view('welcome', compact('statistic', 'headers', 'line', 'statisticLineChart', 'statisticPieChart'));
     }
@@ -111,55 +115,49 @@ class AllController extends Controller
         return $this->openSettingsOnButtonClick($settingId);
     }
 
-    private function buildLineChart() // TODO löschen
-    {
-        $temperatures = Lava::DataTable();
+//    private function buildLineChart() // TODO löschen
+//    {
+//        $temperatures = Lava::DataTable();
+//
+//        $temperatures->addDateColumn('Date')
+//            ->addNumberColumn('Max Temp')
+//            ->addNumberColumn('Mean Temp')
+//            ->addNumberColumn('Min Temp')
+//            ->addRow(['2014-10-1', 67, 65, 62])
+//            ->addRow(['2014-10-2', 68, 65, 61])
+//            ->addRow(['2014-10-3', 68, 62, 55])
+//            ->addRow(['2014-10-4', 72, 62, 52])
+//            ->addRow(['2014-10-5', 61, 54, 47])
+//            ->addRow(['2014-10-6', 70, 58, 45])
+//            ->addRow(['2014-10-7', 74, 70, 65])
+//            ->addRow(['2014-10-8', 75, 69, 62])
+//            ->addRow(['2014-10-9', 69, 63, 56])
+//            ->addRow(['2014-10-10', 64, 58, 52])
+//            ->addRow(['2014-10-11', 59, 55, 50])
+//            ->addRow(['2014-10-12', 65, 56, 46])
+//            ->addRow(['2014-10-13', 66, 56, 46])
+//            ->addRow(['2014-10-14', 75, 70, 64])
+//            ->addRow(['2014-10-15', 76, 72, 68])
+//            ->addRow(['2014-10-16', 71, 66, 60])
+//            ->addRow(['2014-10-17', 72, 66, 60])
+//            ->addRow(['2014-10-18', 63, 62, 62]);
+//
+//        Lava::LineChart('Temps', $temperatures, [
+//            'title' => 'Weather in October'
+//        ]);
+//    }
 
-        $temperatures->addDateColumn('Date')
-            ->addNumberColumn('Max Temp')
-            ->addNumberColumn('Mean Temp')
-            ->addNumberColumn('Min Temp')
-            ->addRow(['2014-10-1', 67, 65, 62])
-            ->addRow(['2014-10-2', 68, 65, 61])
-            ->addRow(['2014-10-3', 68, 62, 55])
-            ->addRow(['2014-10-4', 72, 62, 52])
-            ->addRow(['2014-10-5', 61, 54, 47])
-            ->addRow(['2014-10-6', 70, 58, 45])
-            ->addRow(['2014-10-7', 74, 70, 65])
-            ->addRow(['2014-10-8', 75, 69, 62])
-            ->addRow(['2014-10-9', 69, 63, 56])
-            ->addRow(['2014-10-10', 64, 58, 52])
-            ->addRow(['2014-10-11', 59, 55, 50])
-            ->addRow(['2014-10-12', 65, 56, 46])
-            ->addRow(['2014-10-13', 66, 56, 46])
-            ->addRow(['2014-10-14', 75, 70, 64])
-            ->addRow(['2014-10-15', 76, 72, 68])
-            ->addRow(['2014-10-16', 71, 66, 60])
-            ->addRow(['2014-10-17', 72, 66, 60])
-            ->addRow(['2014-10-18', 63, 62, 62]);
-
-        Lava::LineChart('Temps', $temperatures, [
-            'title' => 'Weather in October'
-        ]);
-    }
-
-    private function buildStatisticLineChart()
+    private function buildStatisticLineChart($data)
     {
         $statisticLineChart = Lava::DataTable();
-
-        $period = [Carbon::today()->subWeek()->toDateString(), Carbon::today()->toDateString()];
-
-        $open = 40;
-        $doing = 50;
-        $done = 35;
 
         $statisticLineChart->addDateColumn('Date')
             ->addNumberColumn('open')
             ->addNumberColumn('doing')
             ->addNumberColumn('done');
 
-        foreach ($period as $column) {
-            $statisticLineChart->addRow([$column, $open = $open + 10, $doing = $doing + 12, $done = $done + 16]);
+        foreach ($data as $date => $values) {
+            $statisticLineChart->addRow([$date, $values['open'], $values['doing'], $values['done']]);
         }
 
         Lava::LineChart('hi', $statisticLineChart, [
@@ -195,11 +193,6 @@ class AllController extends Controller
         Lava::PieChart('Test', $statisticPieChart, [
             'title'  => 'Test',
             'is3D'   => true,
-//            'slices' => [
-//                ['offset' => 0.1],
-//                ['offset' => 0.1],
-//                ['offset' => 0.1]
-//            ]
         ]);
     }
 }
