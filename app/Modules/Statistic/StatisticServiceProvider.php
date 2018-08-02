@@ -2,6 +2,7 @@
 namespace App\Modules\Statistic;
 use App\Modules\Statistic\Contracts\StatisticResultRepositoryContract;
 use App\Modules\Statistic\Repositories\StatisticResultRepository;
+use App\Modules\Statistic\Services\StatisticService;
 use Illuminate\Support\ServiceProvider;
 
 class StatisticServiceProvider extends ServiceProvider
@@ -17,6 +18,7 @@ class StatisticServiceProvider extends ServiceProvider
     }
     public function register()
     {
+        $this->app->singleton(StatisticService::class);
         $this->app->bind(StatisticResultRepositoryContract::class, StatisticResultRepository::class);
     }
     public function provides()

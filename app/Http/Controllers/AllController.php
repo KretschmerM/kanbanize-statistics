@@ -33,44 +33,27 @@ class AllController extends Controller
      */
     public function index()
     {
-        // load options
+        $statistic = $this->statisticResultRepository->getTableDataForToday();      // Muss wahrscheinlich nicht an die View gegeben werden.
+        // Lädt die Daten vom heutigen Tag und Speicher diese ab
 
-        // $period = zeitraum aus options
+//        $headers = $this->statisticResultRepository->getTableHeader();              // lädt alle table headers
+//                                                                                    // muss angepasst werden bzw komplett ersetzt
 
+        $data = $this->statisticResultRepository->getTimePeriodForEachStatistic();  // lädt mir alle Relevenaten daten für die Charts und gibt diese Weiter
 
-        // $data = $this->statisticResultRepository->getData($period);
+        $statisticLineChart = $this->buildStatisticLineChart($data);                // erstellt die LineChart
 
-        // z.B.
-        // open = 'open', 'bug to feature'
-        // doing = 'doing', 'review', 'rückfragen kunde'
-        // done = 'done'
+        $statisticPieChart = $this->buildStatisticPieChart($data);                  // erstellt die PieCharts
 
-        // gruppiertes $data array bauen, $groupedData
-
-        // $this->buildLineChart($groupedData);
-
-        // $headers = ....
-
-        // return view('welcome', ....)
-
-        $statistic = $this->statisticResultRepository->getTableDataForToday();
-
-        $headers = $this->statisticResultRepository->getTableHeader();
-
-        $data = $this->statisticResultRepository->getTimePeriodForEachStatistic();
-
-        $statisticLineChart = $this->buildStatisticLineChart($data);
-
-        $statisticPieChart = $this->buildStatisticPieChart();
-
-
-
-//        return view('welcome', ['statistic' => $statistic, 'header' => $header]);
-
-//        dd($getPeriod);
-
-        return view('welcome', compact('statistic', 'headers', 'line', 'statisticLineChart', 'statisticPieChart'));
+        return view('welcome', compact('statistic', 'statisticLineChart', 'statisticPieChart', 'data'));
     }
+
+//    public function buildCharts()
+//    {
+//        $graph = $this->statisticResultRepository->buildStatisticChart();
+//
+//        return view('statisticBox', compact('graph'));
+//    }
 
     /**
      *
@@ -115,38 +98,6 @@ class AllController extends Controller
         return $this->openSettingsOnButtonClick($settingId);
     }
 
-//    private function buildLineChart() // TODO löschen
-//    {
-//        $temperatures = Lava::DataTable();
-//
-//        $temperatures->addDateColumn('Date')
-//            ->addNumberColumn('Max Temp')
-//            ->addNumberColumn('Mean Temp')
-//            ->addNumberColumn('Min Temp')
-//            ->addRow(['2014-10-1', 67, 65, 62])
-//            ->addRow(['2014-10-2', 68, 65, 61])
-//            ->addRow(['2014-10-3', 68, 62, 55])
-//            ->addRow(['2014-10-4', 72, 62, 52])
-//            ->addRow(['2014-10-5', 61, 54, 47])
-//            ->addRow(['2014-10-6', 70, 58, 45])
-//            ->addRow(['2014-10-7', 74, 70, 65])
-//            ->addRow(['2014-10-8', 75, 69, 62])
-//            ->addRow(['2014-10-9', 69, 63, 56])
-//            ->addRow(['2014-10-10', 64, 58, 52])
-//            ->addRow(['2014-10-11', 59, 55, 50])
-//            ->addRow(['2014-10-12', 65, 56, 46])
-//            ->addRow(['2014-10-13', 66, 56, 46])
-//            ->addRow(['2014-10-14', 75, 70, 64])
-//            ->addRow(['2014-10-15', 76, 72, 68])
-//            ->addRow(['2014-10-16', 71, 66, 60])
-//            ->addRow(['2014-10-17', 72, 66, 60])
-//            ->addRow(['2014-10-18', 63, 62, 62]);
-//
-//        Lava::LineChart('Temps', $temperatures, [
-//            'title' => 'Weather in October'
-//        ]);
-//    }
-
     private function buildStatisticLineChart($data)
     {
         $statisticLineChart = Lava::DataTable();
@@ -156,31 +107,30 @@ class AllController extends Controller
             ->addNumberColumn('doing')
             ->addNumberColumn('done');
 
-        foreach ($data as $date => $values) {
-            $statisticLineChart->addRow([$date, $values['open'], $values['doing'], $values['done']]);
+        foreach ($data as $option) {
+            foreach ($option as $date => $values) {
+                $statisticLineChart->addRow([$date, $values['open'], $values['doing'], $values['done']]);
+            }
         }
-
         Lava::LineChart('hi', $statisticLineChart, [
             'title' => 'test'
         ]);
     }
 
-    private function buildStatisticPieChart()
+    private function buildStatisticPieChart($data)
     {
         $statisticPieChart = Lava::DataTable();
 
-        $values = [
-            'open' => 50,
-            'doing' => 40,
-            'done' => 30
-        ];
+        foreach ($data as $option) {
+            $pie = end($option);
+        }
 
-        $sum = array_sum($values);
+        $sum = array_sum($pie);
 
         $chart = [
-            'open' => $values['open'] / $sum,
-            'doing' => $values['doing'] / $sum,
-            'done' => $values['done'] / $sum
+            'open' => $pie['open'] / $sum,
+            'doing' => $pie['doing'] / $sum,
+            'done' => $pie['done'] / $sum
         ];
 
 
@@ -191,8 +141,8 @@ class AllController extends Controller
             ->addRow(['done', $chart['done']]);
 
         Lava::PieChart('Test', $statisticPieChart, [
-            'title'  => 'Test',
-            'is3D'   => true,
+            'title' => 'Test',
+            'is3D' => true,
         ]);
     }
 }

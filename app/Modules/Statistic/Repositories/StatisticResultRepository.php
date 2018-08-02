@@ -269,15 +269,22 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
     public function getTimePeriodForEachStatistic()
     {
         $options = StatisticOptions::getQuery()->select('settingId', 'options', 'boardId')->get();
+        $date = [];
         foreach ($options as $option) {
             $statistic = \GuzzleHttp\json_decode($option->options, 'true');
+//            dd($options);
+//            dd($option->settingId);
+//            dd($statistic['data']['variation']);
+            $settingId = [];
+            $variation = [];
+
             switch ($statistic['data']['time']) {
                 case $statistic['data']['time'] === 'year':
 
                     $from = Carbon::today()->subYear()->toDateString();
                     $to = Carbon::today()->toDateString();
 
-                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+                    $date[] = $this->buildDataArray($from, $to, $statistic, $option->boardId, $option->settingId, $statistic['data']['variation']);
 
                     break;
 
@@ -286,7 +293,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                     $from = Carbon::today()->subMonth()->toDateString();
                     $to = Carbon::today()->toDateString();
 
-                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+                    $date[] = $this->buildDataArray($from, $to, $statistic, $option->boardId, $option->settingId, $statistic['data']['variation']);
 
                     break;
 
@@ -295,7 +302,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                     $from = Carbon::today()->subWeek()->toDateString();
                     $to = Carbon::today()->toDateString();
 
-                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+                    $date[] = $this->buildDataArray($from, $to, $statistic, $option->boardId, $option->settingId, $statistic['data']['variation']);
 
                     break;
 
@@ -304,11 +311,12 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                     $from = Carbon::today()->toDateString();
                     $to = Carbon::today()->toDateString();
 
-                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId);
+                    $date = $this->buildDataArray($from, $to, $statistic, $option->boardId, $option->settingId, $statistic['data']['variation']);
 
                     break;
             }
         }
+//        dd($date);
         return $date;
     }
 
@@ -333,11 +341,10 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ->get();
 
 //        $this->cacheBoardIds[$boardId] = $getData;
-
         return $getData;
     }
 
-    protected function buildDataArray($from, $to, $statistic, $boardId)
+    protected function buildDataArray($from, $to, $statistic, $boardId, $settingId, $variation)
     {
         $date = [];
 
@@ -350,6 +357,8 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                     'open' => 0,
                     'doing' => 0,
                     'done' => 0,
+                    'settingId' => $settingId,
+                    'variation' => $variation,
                 ];
             }
 
@@ -363,6 +372,17 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                 $date[$count->date]['done'] += (int)$count->count;
             }
         }
+//dd($date);
         return $date;
+    }
+
+    public function buildStatisticChart($data)
+    {
+        switch ($data) {
+//            case
+        }
+
+
+        return $data;
     }
 }

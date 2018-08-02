@@ -25,90 +25,15 @@
 <body>
 @include('layouts.nav')
 <br>
+
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading " style="height: 31px">
-                    <a> Statistik </a>
-                    <span class="float-md-right">
-                        <a class="btn btn-sm btn-info" href="/settings/1"><span
-                                class="fas fa-cog"></span></a>
-                     </span>
-                </div>
 
-            </div>
-        </div>
-    </div>
-    <br> <br> <br>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="height: 31px">
-                    Statistik
-                    <span class="float-md-right">
-                        <a class="btn btn-sm btn-info" href="/settings/2"><span
-                                class="fas fa-cog"></span></a>
-                     </span>
-                </div>
-                <div class="panel-body border">
+    @foreach($data as $option)
 
+    @include('statisticBox', ['option' => $option])
 
+    @endforeach
 
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="height: 31px">
-                    Statistik
-                    <span class="float-md-right">
-                        <a class="btn btn-sm btn-info" href="/settings/3"><span
-                                class="fas fa-cog"></span></a>
-                     </span>
-                </div>
-                <div class="panel-body border">
-                    <div id="test_div">
-                        @linechart('hi', 'test_div')
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br> <br> <br>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="height: 31px">
-                    Statistik
-                    <span class="float-md-right">
-                        <a class="btn btn-sm btn-info" href="/settings/4"><span
-                                class="fas fa-cog"></span></a>
-                     </span>
-                </div>
-                <div class="panel-body border">
-                    <div id="chart-div">
-                        @piechart('Test', 'chart-div')
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="height: 31px">
-                    Statistik
-                    <span class="float-md-right">
-                        <a class="btn btn-sm btn-info" href="/settings/5"><span
-                                class="fas fa-cog"></span></a>
-                     </span>
-                </div>
-                <div class="panel-body border">
-                    <br>
-                    <h1>  </h1>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 @include('layouts.footer')

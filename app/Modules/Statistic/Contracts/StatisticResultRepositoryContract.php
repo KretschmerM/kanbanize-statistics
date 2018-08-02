@@ -29,4 +29,6 @@ interface StatisticResultRepositoryContract
     public function getTimePeriodForEachStatistic();
 
     public function getDataForStatistic($boardId, $from, $to);
+
+    public function buildStatisticChart($data);
 }
