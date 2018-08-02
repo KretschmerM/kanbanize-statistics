@@ -27,13 +27,13 @@
 <br>
 
 <div class="container">
+    <div class="row">
+    @foreach($settings as $option)
 
-    @foreach($data as $option)
-
-    @include('statisticBox', ['option' => $option])
+        @include('statisticBox', ['option' => $option])
 
     @endforeach
-
+    </div>
 </div>
 
 @include('layouts.footer')

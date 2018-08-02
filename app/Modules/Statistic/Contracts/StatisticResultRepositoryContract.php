@@ -26,9 +26,9 @@ interface StatisticResultRepositoryContract
 
     public function getKanbanizeDataForEachBoard();
 
-    public function getTimePeriodForEachStatistic();
-
     public function getDataForStatistic($boardId, $from, $to);
 
-    public function buildStatisticChart($data);
+    public function getStatisticOptions();
+
+    public function getStatisticData($option);
 }

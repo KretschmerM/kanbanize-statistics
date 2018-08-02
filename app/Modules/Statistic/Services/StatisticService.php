@@ -8,15 +8,88 @@
 
 namespace App\Modules\Statistic\Services;
 
+use App\Modules\Statistic\Contracts\StatisticResultRepositoryContract;
+use Lava;
+
 
 class StatisticService
 {
-    public function buildStatistik($option) {
+    private $statisticResultRepository;
 
-        $data = $this->statisticResultRepository->getTimePeriodForEachStatistic();
+    public function __construct(StatisticResultRepositoryContract $statisticResultRepository)
+    {
+        $this->statisticResultRepository = $statisticResultRepository;
+    }
 
-        
+    public function buildStatistik($option)
+    {
+
+        $data = $this->statisticResultRepository->getStatisticData($option);
+
+        $options = json_decode($option['options'], true);
+
+        switch ($options['data']['variation']) {
+
+            case ($options['data']['variation'] === 'lineChart'):
+
+                $this->buildStatisticLineChart($data, $option['settingId']);
+
+                return view('layouts.lineChart', compact('options', 'data', 'option'));
+                break;
+            case ($options['data']['variation'] === 'pieChart'):
+
+                $this->buildStatisticPieChart($data, $option['settingId']);
+
+                return view('layouts.pieChart', compact('options', 'data', 'option'));
+                break;
+            case ($options['data']['variation'] === 'table'):
+
+                return view('layouts.table', compact('options', 'data', 'option'));
+                break;
+        }
 
         return 'test';
+    }
+
+    private function buildStatisticLineChart($data, $settingId)
+    {
+        $statisticLineChart = Lava::DataTable();
+
+        $statisticLineChart->addDateColumn('Date')
+            ->addNumberColumn('open')
+            ->addNumberColumn('doing')
+            ->addNumberColumn('done');
+
+        foreach ($data as $date => $values) {
+            $statisticLineChart->addRow([$date, $values['open'], $values['doing'], $values['done']]);
+        }
+
+        Lava::LineChart('lineChart_' . $settingId, $statisticLineChart, [
+        ]);
+
+
+    }
+
+    private function buildStatisticPieChart($data, $settingId)
+    {
+        $statisticPieChart = Lava::DataTable();
+
+            $pie = end($data);
+
+        $chart = [
+            'open' => $pie['open'],
+            'doing' => $pie['doing'],
+            'done' => $pie['done']
+        ];
+
+        $statisticPieChart->addStringColumn('Statistic')
+            ->addNumberColumn('Percent')
+            ->addRow(['open', $chart['open']])
+            ->addRow(['doing', $chart['doing']])
+            ->addRow(['done', $chart['done']]);
+
+        Lava::PieChart('pieChart_' . $settingId, $statisticPieChart, [
+            'is3D' => true,
+        ]);
     }
 }

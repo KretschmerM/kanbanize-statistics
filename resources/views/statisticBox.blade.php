@@ -1,8 +1,7 @@
-@inject('buildStatistic' 'App\Modules\Statistic\Services\StatisticService')
+@inject('buildStatistic', 'App\Modules\Statistic\Services\StatisticService')
 
-<div class="container">
 
-    {{ $option }}
+{!! $buildStatistic->buildStatistik($option) !!}
 
-</div>
+
 

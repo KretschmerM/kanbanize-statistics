@@ -10,7 +10,6 @@
 |
 */
 Route::get('/'          ,'AllController@index');
-//Route::get('/', 'AllController@buildCharts');
 Route::get('/generate' ,'AllController@loadDataOnButtonClick');
 Route::get('/settings/{settingId}', 'AllController@openSettingsOnButtonClick');
 Route::post('/settings/{settingId}', 'AllController@saveSettingsOnButtonClick');

@@ -33,27 +33,12 @@ class AllController extends Controller
      */
     public function index()
     {
-        $statistic = $this->statisticResultRepository->getTableDataForToday();      // Muss wahrscheinlich nicht an die View gegeben werden.
-        // Lädt die Daten vom heutigen Tag und Speicher diese ab
+        $statistic = $this->statisticResultRepository->getTableDataForToday();
 
-//        $headers = $this->statisticResultRepository->getTableHeader();              // lädt alle table headers
-//                                                                                    // muss angepasst werden bzw komplett ersetzt
+        $settings = $this->statisticResultRepository->getStatisticOptions();
 
-        $data = $this->statisticResultRepository->getTimePeriodForEachStatistic();  // lädt mir alle Relevenaten daten für die Charts und gibt diese Weiter
-
-        $statisticLineChart = $this->buildStatisticLineChart($data);                // erstellt die LineChart
-
-        $statisticPieChart = $this->buildStatisticPieChart($data);                  // erstellt die PieCharts
-
-        return view('welcome', compact('statistic', 'statisticLineChart', 'statisticPieChart', 'data'));
+        return view('welcome', compact('statistic', 'settings'));
     }
-
-//    public function buildCharts()
-//    {
-//        $graph = $this->statisticResultRepository->buildStatisticChart();
-//
-//        return view('statisticBox', compact('graph'));
-//    }
 
     /**
      *
@@ -96,53 +81,5 @@ class AllController extends Controller
             $this->statisticResultRepository->saveStatisticOptions($settingId, $request);
         }
         return $this->openSettingsOnButtonClick($settingId);
-    }
-
-    private function buildStatisticLineChart($data)
-    {
-        $statisticLineChart = Lava::DataTable();
-
-        $statisticLineChart->addDateColumn('Date')
-            ->addNumberColumn('open')
-            ->addNumberColumn('doing')
-            ->addNumberColumn('done');
-
-        foreach ($data as $option) {
-            foreach ($option as $date => $values) {
-                $statisticLineChart->addRow([$date, $values['open'], $values['doing'], $values['done']]);
-            }
-        }
-        Lava::LineChart('hi', $statisticLineChart, [
-            'title' => 'test'
-        ]);
-    }
-
-    private function buildStatisticPieChart($data)
-    {
-        $statisticPieChart = Lava::DataTable();
-
-        foreach ($data as $option) {
-            $pie = end($option);
-        }
-
-        $sum = array_sum($pie);
-
-        $chart = [
-            'open' => $pie['open'] / $sum,
-            'doing' => $pie['doing'] / $sum,
-            'done' => $pie['done'] / $sum
-        ];
-
-
-        $statisticPieChart->addStringColumn('Statistic')
-            ->addNumberColumn('Percent')
-            ->addRow(['open', $chart['open']])
-            ->addRow(['doing', $chart['doing']])
-            ->addRow(['done', $chart['done']]);
-
-        Lava::PieChart('Test', $statisticPieChart, [
-            'title' => 'Test',
-            'is3D' => true,
-        ]);
     }
 }
