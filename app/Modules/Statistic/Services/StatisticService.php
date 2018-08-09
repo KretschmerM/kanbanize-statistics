@@ -30,25 +30,25 @@ class StatisticService
 
         switch ($options['data']['variation']) {
 
-            case ($options['data']['variation'] === 'lineChart'):
+            case ($options['data']['variation'] === 'Line Chart'):
 
                 $this->buildStatisticLineChart($data, $option['settingId']);
 
                 return view('layouts.lineChart', compact('options', 'data', 'option'));
                 break;
-            case ($options['data']['variation'] === 'pieChart'):
+            case ($options['data']['variation'] === 'Pie Chart'):
 
                 $this->buildStatisticPieChart($data, $option['settingId']);
 
                 return view('layouts.pieChart', compact('options', 'data', 'option'));
                 break;
-            case ($options['data']['variation'] === 'table'):
+            case ($options['data']['variation'] === 'Table'):
 
                 return view('layouts.table', compact('options', 'data', 'option'));
                 break;
         }
 
-        return 'test';
+        return 'something went wrong';
     }
 
     private function buildStatisticLineChart($data, $settingId)
@@ -74,7 +74,7 @@ class StatisticService
     {
         $statisticPieChart = Lava::DataTable();
 
-            $pie = end($data);
+        $pie = end($data);
 
         $chart = [
             'open' => $pie['open'],

@@ -201,24 +201,26 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
         StatisticOptions::updateOrCreate(['settingId' => $settingId],
             ['boardId' => $options['data']['boardId'], 'options' => $json]);
+
+        return $options;
     }
 
     public function getStatisticPeriod()
     {
         return [
-            StatisticOptions::PERIOD_LIVE => 'today',
-            StatisticOptions::PERIOD_LAST_WEEK => 'week',
-            StatisticOptions::PERIOD_LAST_MONTH => 'month',
-            StatisticOptions::PERIOD_LAST_YEAR => 'year',
+            StatisticOptions::PERIOD_LIVE => 'Live',
+            StatisticOptions::PERIOD_LAST_WEEK => 'Week',
+            StatisticOptions::PERIOD_LAST_MONTH => 'Month',
+            StatisticOptions::PERIOD_LAST_YEAR => 'Year',
         ];
     }
 
     public function getStatisticVariation()
     {
         return [
-            StatisticOptions::STATISTIC_TABLE => 'table',
-            StatisticOptions::STATISTIC_LINE_CHART => 'lineChart',
-            StatisticOptions::STATISTIC_PIE_CHART => 'pieChart',
+            StatisticOptions::STATISTIC_TABLE => 'Table',
+            StatisticOptions::STATISTIC_LINE_CHART => 'Line Chart',
+            StatisticOptions::STATISTIC_PIE_CHART => 'Pie Chart',
         ];
     }
 
@@ -266,12 +268,24 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         }
     }
 
+    public function deleteStatistic($settingId)
+    {
+        DB::table('kanbanize_statistic_options')->where('settingId', '=', $settingId)->delete();
+    }
+
+    public function createStatistic($settingId)
+    {
+        dd($settingId);
+
+        return $settingId;
+    }
+
     public function getStatisticData($option)
     {
         $date = [];
         $statistic = \GuzzleHttp\json_decode($option['options'], 'true');
         switch ($statistic['data']['time']) {
-            case $statistic['data']['time'] === 'year':
+            case $statistic['data']['time'] === 'Year':
 
                 $from = Carbon::today()->subYear()->toDateString();
                 $to = Carbon::today()->toDateString();
@@ -280,7 +294,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
                 break;
 
-            case $statistic['data']['time'] === 'month':
+            case $statistic['data']['time'] === 'Month':
 
                 $from = Carbon::today()->subMonth()->toDateString();
                 $to = Carbon::today()->toDateString();
@@ -289,7 +303,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
                 break;
 
-            case $statistic['data']['time'] === 'week':
+            case $statistic['data']['time'] === 'Week':
 
                 $from = Carbon::today()->subWeek()->toDateString();
                 $to = Carbon::today()->toDateString();
@@ -298,7 +312,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
                 break;
 
-            case $statistic['data']['time'] === 'live':
+            case $statistic['data']['time'] === 'Live':
 
                 $from = Carbon::today()->toDateString();
                 $to = Carbon::today()->toDateString();

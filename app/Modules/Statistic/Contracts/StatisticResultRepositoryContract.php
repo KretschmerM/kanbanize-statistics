@@ -31,4 +31,8 @@ interface StatisticResultRepositoryContract
     public function getStatisticOptions();
 
     public function getStatisticData($option);
+
+    public function deleteStatistic($settingId);
+
+    public function createStatistic($settingId);
 }

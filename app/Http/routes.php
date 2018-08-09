@@ -9,14 +9,17 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/'          ,'AllController@index');
-Route::get('/generate' ,'AllController@loadDataOnButtonClick');
+Route::get('/', 'AllController@index');
+
+Route::get('/generate', 'AllController@loadDataOnButtonClick');
+
 Route::get('/settings/{settingId}', 'AllController@openSettingsOnButtonClick');
+
 Route::post('/settings/{settingId}', 'AllController@saveSettingsOnButtonClick');
 
+Route::delete('/settings/{settingId}', 'AllController@deleteStatisticOnButtonClick');
 
 //Route::resource('/','AllController@index');
-
 
 
 /*

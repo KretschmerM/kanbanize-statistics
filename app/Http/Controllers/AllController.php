@@ -37,7 +37,9 @@ class AllController extends Controller
 
         $settings = $this->statisticResultRepository->getStatisticOptions();
 
-        return view('welcome', compact('statistic', 'settings'));
+        $id = 100;
+
+        return view('welcome', compact('statistic', 'settings', 'id'));
     }
 
     /**
@@ -52,11 +54,16 @@ class AllController extends Controller
         return $this->index();
     }
 
+    public function deleteStatisticOnButtonClick($settingId)
+    {
+        $this->statisticResultRepository->deleteStatistic($settingId);
+
+        return $this->index();
+    }
+
     public function openSettingsOnButtonClick($settingId)
     {
         $fetchTableData = $this->statisticResultRepository->openStatisticOptions($settingId);
-
-//        dd($fetchTableData);
 
         $names = StatisticColumn::getQuery()->where('boardId', '=',
             (INT)$fetchTableData['data']['boardId'])->orderBy('name', 'ASC')->get();
@@ -75,11 +82,15 @@ class AllController extends Controller
     {
         $request = request()->all();
 
-//        dd($request);
+        $options = $this->statisticResultRepository->saveStatisticOptions($settingId, $request);
 
-        if ($settingId) {
-            $this->statisticResultRepository->saveStatisticOptions($settingId, $request);
+        if (($options['data']['time']) == null) {
+
+            return $this->openSettingsOnButtonClick($settingId);
+
+        } else {
+
+            return $this->index();
         }
-        return $this->openSettingsOnButtonClick($settingId);
     }
 }

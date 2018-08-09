@@ -20,7 +20,7 @@
         <div class="container" style="margin-top: 20px">
             <div class="form-group">
                 <label for="UserName" class="col-sm-2 control-label"> Name </label>
-                <div class="col-sm-10">
+                <div class="col-sm-12">
                     <input type="text" class="form-control" placeholder="Name" id="UserName" name="name"
                            value="{{ $fetchTableData['data']['name'] }}">
                 </div>

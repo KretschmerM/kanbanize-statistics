@@ -21,14 +21,14 @@ class StatisticOptions extends Model
         'settingId',
     ];
 
-    const PERIOD_LIVE = 'live';
-    const PERIOD_LAST_WEEK = 'week';
-    const PERIOD_LAST_MONTH = 'month';
-    const PERIOD_LAST_YEAR = 'year';
+    const PERIOD_LIVE = 'Live';
+    const PERIOD_LAST_WEEK = 'Week';
+    const PERIOD_LAST_MONTH = 'Month';
+    const PERIOD_LAST_YEAR = 'Year';
 
-    const STATISTIC_TABLE = 'table';
-    const STATISTIC_LINE_CHART = 'lineChart';
-    const STATISTIC_PIE_CHART = 'pieChart';
+    const STATISTIC_TABLE = 'Table';
+    const STATISTIC_LINE_CHART = 'Line Chart';
+    const STATISTIC_PIE_CHART = 'Pie Chart';
 
     public $timestamps = false;
 
