@@ -23,6 +23,7 @@ class StatisticOptions extends Model
 
     const PERIOD_LIVE = 'Live';
     const PERIOD_LAST_WEEK = 'Week';
+    const PERIOD_TWO_WEEKS = 'Two Weeks';
     const PERIOD_LAST_MONTH = 'Month';
     const PERIOD_LAST_YEAR = 'Year';
 

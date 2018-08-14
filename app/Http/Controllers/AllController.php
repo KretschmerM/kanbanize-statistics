@@ -37,9 +37,7 @@ class AllController extends Controller
 
         $settings = $this->statisticResultRepository->getStatisticOptions();
 
-        $id = 100;
-
-        return view('welcome', compact('statistic', 'settings', 'id'));
+        return view('welcome', compact('statistic', 'settings'));
     }
 
     /**

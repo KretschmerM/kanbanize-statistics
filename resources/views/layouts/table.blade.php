@@ -26,6 +26,7 @@
                     <th> Open</th>
                     <th> Doing</th>
                     <th> Done</th>
+                    <th> New Bugs</th>
 
                 </tr>
                 </thead>
@@ -37,6 +38,7 @@
                     <td> {{ $value['open'] }}</td>
                     <td> {{ $value['doing'] }}</td>
                     <td> {{ $value['done'] }}</td>
+                    <td> {{ $value['newBugs'] }}</td>
                 </tr>
 
                 @endforeach

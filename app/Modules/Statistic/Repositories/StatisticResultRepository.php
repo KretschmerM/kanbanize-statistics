@@ -49,8 +49,10 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         $data = \GuzzleHttp\json_decode($body);
 
         $optimize = [];
+        $newBugs = 0;
 
         foreach ($data as $task) {
+//            dd($task->createdat);
             if (!isset($optimize[$task->columnid])) {
                 $optimize[$task->columnid] = [
                     'name' => $task->columnname,
@@ -69,11 +71,22 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
                 ];
             }
             $optimize[$task->columnid]['reporter'][$task->assignee]['count']++;
+
+            $test = Carbon::createFromFormat('Y-m-d H:i:s', $task->createdat);
+
+            if ($task->columnpath == 'archive_636') {
+                dd($task);
+            }
+
+            if ($test->gte(Carbon::now()->subDays(1))) {
+                $newBugs += 1;
+            }
         }
 
         $statistic = new Statistic([
             'boardId' => $boardId,
-            'date' => Carbon::now()
+            'date' => Carbon::now(),
+            'newBugs' => $newBugs
         ]);
 
         $statistic->save();
@@ -168,7 +181,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         } catch (\Exception $es) {
         }
 
-
         $options['data'] = [
             'name' => $dataSeleced['name'] ?? '',
             'open' => $dataSeleced['open'] ?? [],
@@ -210,6 +222,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         return [
             StatisticOptions::PERIOD_LIVE => 'Live',
             StatisticOptions::PERIOD_LAST_WEEK => 'Week',
+            StatisticOptions::PERIOD_TWO_WEEKS => 'Two Weeks',
             StatisticOptions::PERIOD_LAST_MONTH => 'Month',
             StatisticOptions::PERIOD_LAST_YEAR => 'Year',
         ];
@@ -303,6 +316,15 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
                 break;
 
+            case $statistic['data']['time'] === 'Two Weeks':
+
+                $from = Carbon::today()->subWeeks(2)->toDateString();
+                $to = Carbon::today()->toDateString();
+
+                $date = $this->buildDataArray($from, $to, $statistic, $option['boardId']);
+
+                break;
+
             case $statistic['data']['time'] === 'Week':
 
                 $from = Carbon::today()->subWeek()->toDateString();
@@ -321,6 +343,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
                 break;
         }
+
         return $date;
     }
 
@@ -336,32 +359,47 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ->select([
                 'nameIntern',
                 'date',
+                'newBugs',
                 \DB::raw('SUM(kanbanize_statistic_amount.count) as count'),
 
             ])->distinct()
             ->leftJoin('kanbanize_statistic_amount', 'mainId', '=', 'kanbanize_statistic_main.id')
             ->leftJoin('kanbanize_statistic_column', 'columnId', '=', 'kanbanize_statistic_column.id')
-            ->groupBy('columnId', 'date')
+            ->groupBy('columnId', 'date', 'newBugs')
             ->get();
 
 //        $this->cacheBoardIds[$boardId] = $getData;
+
         return $getData;
     }
 
     protected function buildDataArray($from, $to, $statistic, $boardId)
     {
         $date = [];
-
+        $totalLastDate = 0;
+        $totalCurrentDate = 0;
+        $currentDate = '';
         $amount = $this->getDataForStatistic($boardId, $from, $to);
 
-        foreach ($amount as $count) {
+//        dd($amount);
+//        $firstDate = null;
 
+        foreach ($amount as $count) {
             if (!array_key_exists($count->date, $date)) {
                 $date[$count->date] = [
                     'open' => 0,
                     'doing' => 0,
                     'done' => 0,
+                    'newBugs' => 0,
                 ];
+            }
+
+            if ($currentDate != $count->date) {
+                $date[$count->date]['newBugs'] = $totalCurrentDate - $totalLastDate;
+
+                $totalLastDate = $totalCurrentDate;
+                $totalCurrentDate = 0;
+                $currentDate = $count->date;
             }
 
             if (in_array($count->nameIntern, $statistic['data']['open'])) {
@@ -373,8 +411,8 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             if (in_array($count->nameIntern, $statistic['data']['done'])) {
                 $date[$count->date]['done'] += (int)$count->count;
             }
+            $date[$count->date]['newBugs'] = $count->newBugs;
         }
-
         return $date;
     }
 
@@ -394,4 +432,10 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
         return $options;
     }
+
+    public function getNewBugs()
+    {
+
+    }
+
 }

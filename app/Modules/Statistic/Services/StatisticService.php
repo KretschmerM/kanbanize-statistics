@@ -38,7 +38,7 @@ class StatisticService
                 break;
             case ($options['data']['variation'] === 'Pie Chart'):
 
-                $this->buildStatisticPieChart($data, $option['settingId']);
+                $this->buildStatisticPieChart($data, $option['settingId'], $options['data']['time']);
 
                 return view('layouts.pieChart', compact('options', 'data', 'option'));
                 break;
@@ -58,28 +58,41 @@ class StatisticService
         $statisticLineChart->addDateColumn('Date')
             ->addNumberColumn('open')
             ->addNumberColumn('doing')
-            ->addNumberColumn('done');
+            ->addNumberColumn('done')
+            ->addNumberColumn('newBugs');
 
         foreach ($data as $date => $values) {
-            $statisticLineChart->addRow([$date, $values['open'], $values['doing'], $values['done']]);
+            $statisticLineChart->addRow([
+                $date,
+                $values['open'],
+                $values['doing'],
+                $values['done'],
+                $values['newBugs']
+            ]);
         }
 
         Lava::LineChart('lineChart_' . $settingId, $statisticLineChart, [
         ]);
-
-
     }
 
-    private function buildStatisticPieChart($data, $settingId)
+    private function buildStatisticPieChart($data, $settingId, $time)
     {
         $statisticPieChart = Lava::DataTable();
 
         $pie = end($data);
 
+        if ($time !== 'Live') {
+            $pie['newBugs'] = 0;
+            foreach ($data as $day){
+                $pie['newBugs'] += $day['newBugs'];
+            }
+        }
+
         $chart = [
             'open' => $pie['open'],
             'doing' => $pie['doing'],
-            'done' => $pie['done']
+            'done' => $pie['done'],
+            'newBugs' => $pie['newBugs'],
         ];
 
         $statisticPieChart->addStringColumn('Statistic')
@@ -90,6 +103,7 @@ class StatisticService
 
         Lava::PieChart('pieChart_' . $settingId, $statisticPieChart, [
             'is3D' => true,
+            'title' => $chart['newBugs'] . ' ' . 'Neue Bugs im Zeitraum: ' . $time
         ]);
     }
 }

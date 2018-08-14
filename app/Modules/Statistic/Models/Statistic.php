@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $date
  * @property int $boardId
+ * @property int $newBugs
  */
 class Statistic extends Model
 {
@@ -36,6 +37,7 @@ class Statistic extends Model
     protected $fillable = [
         'boardId',
         'date',
+        'newBugs',
     ];
 
     public $timestamps = false;
