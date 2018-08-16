@@ -17,6 +17,7 @@ class CreateKanbanizeStatisticColumn extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('nameIntern')->unique();
+            $table->string('boardId');
         });
     }
 

@@ -103,7 +103,7 @@ class StatisticService
 
         Lava::PieChart('pieChart_' . $settingId, $statisticPieChart, [
             'is3D' => true,
-            'title' => $chart['newBugs'] . ' ' . 'Neue Bugs im Zeitraum: ' . $time
+            'title' => $chart['newBugs'] . ' ' . 'Neue Bugs im ausgewählten Zeitraum.'
         ]);
     }
 }

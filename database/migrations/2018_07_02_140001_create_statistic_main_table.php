@@ -17,6 +17,7 @@ class CreateStatisticMainTable extends Migration
             $table->increments('id');
             $table->date('date');
             $table->integer('boardId');
+            $table->integer('newBugs');
 
             $table->index(['date', 'boardId'], 'UKEY_date_boardId');
         });

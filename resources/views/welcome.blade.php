@@ -14,7 +14,7 @@
 <style>
     .panel-heading {
         color: white;
-        background-color: #2e3436;
+        background-color: #6c757d;
         text-align: center;
     }
 </style>
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-@include('layouts.footer')
+<!--@include('layouts.footer')-->
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

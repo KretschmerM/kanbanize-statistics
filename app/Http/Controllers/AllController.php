@@ -33,11 +33,11 @@ class AllController extends Controller
      */
     public function index()
     {
-        $statistic = $this->statisticResultRepository->getTableDataForToday();
-
         $settings = $this->statisticResultRepository->getStatisticOptions();
 
-        return view('welcome', compact('statistic', 'settings'));
+        $id = $this->statisticResultRepository->getNewStatisticId();
+
+        return view('welcome', compact( 'settings', 'id'));
     }
 
     /**
@@ -72,8 +72,10 @@ class AllController extends Controller
 
         $boardIds = $this->statisticResultRepository->getKanbanizeBoards();
 
+        $id = $this->statisticResultRepository->getNewStatisticId();
+
         return view('settings',
-            compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection'));
+            compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection', 'id'));
     }
 
     public function saveSettingsOnButtonClick($settingId)

@@ -15,9 +15,9 @@ class CreateKanbanizeStatisticOptions extends Migration
     {
         Schema::create('kanbanize_statistic_options', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('boardId')->unique();
-            $table->text('options');
+            $table->integer('boardId');
             $table->integer('settingId');
+            $table->text('options');
         });
     }
 

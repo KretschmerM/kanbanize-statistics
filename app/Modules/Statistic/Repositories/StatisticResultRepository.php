@@ -52,7 +52,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         $newBugs = 0;
 
         foreach ($data as $task) {
-//            dd($task->createdat);
             if (!isset($optimize[$task->columnid])) {
                 $optimize[$task->columnid] = [
                     'name' => $task->columnname,
@@ -73,10 +72,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             $optimize[$task->columnid]['reporter'][$task->assignee]['count']++;
 
             $test = Carbon::createFromFormat('Y-m-d H:i:s', $task->createdat);
-
-            if ($task->columnpath == 'archive_636') {
-                dd($task);
-            }
 
             if ($test->gte(Carbon::now()->subDays(1))) {
                 $newBugs += 1;
@@ -288,9 +283,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
     public function createStatistic($settingId)
     {
-        dd($settingId);
 
-        return $settingId;
     }
 
     public function getStatisticData($option)
@@ -349,9 +342,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
 
     public function getDataForStatistic($boardId, $from, $to)
     {
-//        if (array_key_exists($boardId, $this->cacheBoardIds)) {
-//            return $this->cacheBoardIds[$boardId];
-//        }
 
         $getData = DB::table('kanbanize_statistic_main')
             ->whereBetween('date', [$from, $to])
@@ -380,9 +370,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         $totalCurrentDate = 0;
         $currentDate = '';
         $amount = $this->getDataForStatistic($boardId, $from, $to);
-
-//        dd($amount);
-//        $firstDate = null;
 
         foreach ($amount as $count) {
             if (!array_key_exists($count->date, $date)) {
@@ -433,9 +420,17 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         return $options;
     }
 
-    public function getNewBugs()
+    public function getNewStatisticId()
     {
+        $settingIds = DB::table('kanbanize_statistic_options')
+            ->select([
+                'settingId'
+            ])
+            ->max('settingId');
 
+        $id = $settingIds + 1;
+
+        return $id;
     }
 
 }
