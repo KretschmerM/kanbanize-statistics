@@ -31,6 +31,11 @@ class StatisticOptions extends Model
     const STATISTIC_LINE_CHART = 'Line Chart';
     const STATISTIC_PIE_CHART = 'Pie Chart';
 
+    const INTERVAL_DAILY = 'Daily';
+    const INTERVAL_WEEKLY = 'Weekly';
+    const INTERVAL_SPRINT_TWO_WEEKS = 'Sprint 2 Weeks';
+    const INTERVAL_MONTHLY = 'Monthly';
+
     public $timestamps = false;
 
 //    protected $casts = [

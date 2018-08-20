@@ -184,6 +184,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             'boardId' => $dataSeleced['boardId'] ?? 0,
             'time' => $dataSeleced['time'] ?? '',
             'variation' => $dataSeleced['variation'] ?? 0,
+            'interval' => $dataSeleced['interval'] ?? 0,
         ];
 
         return $options;
@@ -200,7 +201,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             'boardId' => $data['boardId'] ?? 0,
             'time' => $data['time'] ?? '',
             'variation' => $data['variation'] ?? 0,
-
+            'interval' => $data['interval'] ?? 0
         ];
 
 
@@ -229,6 +230,16 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             StatisticOptions::STATISTIC_TABLE => 'Table',
             StatisticOptions::STATISTIC_LINE_CHART => 'Line Chart',
             StatisticOptions::STATISTIC_PIE_CHART => 'Pie Chart',
+        ];
+    }
+
+    public function getStatisticInterval()
+    {
+        return [
+            StatisticOptions::INTERVAL_DAILY => 'Daily',
+            StatisticOptions::INTERVAL_WEEKLY => 'Weekly',
+            StatisticOptions::INTERVAL_SPRINT_TWO_WEEKS => 'Sprint 2 Weeks',
+            StatisticOptions::INTERVAL_MONTHLY => 'Monthly',
         ];
     }
 
@@ -279,11 +290,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
     public function deleteStatistic($settingId)
     {
         DB::table('kanbanize_statistic_options')->where('settingId', '=', $settingId)->delete();
-    }
-
-    public function createStatistic($settingId)
-    {
-
     }
 
     public function getStatisticData($option)
@@ -366,6 +372,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
     protected function buildDataArray($from, $to, $statistic, $boardId)
     {
         $date = [];
+
         $totalLastDate = 0;
         $totalCurrentDate = 0;
         $currentDate = '';
@@ -400,6 +407,58 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             }
             $date[$count->date]['newBugs'] = $count->newBugs;
         }
+
+        $interval = key($date);
+        $data = [];
+        $newBugs = 0;
+
+        if ($statistic['data']['interval'] != 'Daily') {
+            foreach ($date as $day => $values) {
+                $newBugs += $values['newBugs'];
+                if ($statistic['data']['interval'] === 'Weekly') {
+                    if (Carbon::parse($interval) == Carbon::parse($day)) {
+                        $data[$day] = [
+                            'open' => $values['open'],
+                            'doing' => $values['doing'],
+                            'done' => $values['done'],
+                            'newBugs' => $values['newBugs'],
+                        ];
+                        $values['newBugs'] = $newBugs;
+                        $newBugs = 0;
+                        $interval = Carbon::parse($interval)->addWeek();
+                        $interval = $interval->toDateString();
+                    }
+                } elseif ($statistic['data']['interval'] === 'Sprint 2 Weeks') {
+                    if (Carbon::parse($interval) == Carbon::parse($day)) {
+                        $data[$day] = [
+                            'open' => $values['open'],
+                            'doing' => $values['doing'],
+                            'done' => $values['done'],
+                            'newBugs' => $values['newBugs'],
+                        ];
+                        $values['newBugs'] = $newBugs;
+                        $newBugs = 0;
+                        $interval = Carbon::parse($interval)->addWeeks(2);
+                        $interval = $interval->toDateString();
+                    }
+                } elseif ($statistic['data']['interval'] === 'Monthly') {
+                    if (Carbon::parse($interval) == Carbon::parse($day)) {
+                        $data[$day] = [
+                            'open' => $values['open'],
+                            'doing' => $values['doing'],
+                            'done' => $values['done'],
+                            'newBugs' => $values['newBugs'],
+                        ];
+                        $values['newBugs'] = $newBugs;
+                        $newBugs = 0;
+                        $interval = Carbon::parse($interval)->addMonth();
+                        $interval = $interval->toDateString();
+                    }
+                }
+            }
+            $date = $data;
+        }
+
         return $date;
     }
 

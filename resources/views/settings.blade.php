@@ -116,6 +116,20 @@
                     @endforeach
                 </select>
             </div>
+            <div class="form-group">
+                <div class="panel-heading" style="margin-top: 10px">
+                    <a> Interval </a>
+                </div>
+                <select class="custom-select" name="interval" id="interval">
+                    @foreach($intervalSelection as $interval => $displayName)
+                    @if ($interval === $fetchTableData['data']['interval'])
+                    <option value="{{ $interval }}" selected> {{$displayName}}</option>
+                    @else
+                    <option value="{{ $interval }}"> {{$displayName}}</option>
+                    @endif
+                    @endforeach
+                </select>
+            </div>
 
             @endif
             <div style="margin-top: 20px">

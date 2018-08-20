@@ -22,6 +22,8 @@ interface StatisticResultRepositoryContract
 
     public function getStatisticVariation();
 
+    public function getStatisticInterval();
+
     public function getKanbanizeBoards();
 
     public function getKanbanizeDataForEachBoard();
@@ -33,8 +35,6 @@ interface StatisticResultRepositoryContract
     public function getStatisticData($option);
 
     public function deleteStatistic($settingId);
-
-    public function createStatistic($settingId);
 
     public function getNewStatisticId();
 }

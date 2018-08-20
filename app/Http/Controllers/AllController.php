@@ -70,12 +70,14 @@ class AllController extends Controller
 
         $variationSelection = $this->statisticResultRepository->getStatisticVariation();
 
+        $intervalSelection = $this->statisticResultRepository->getStatisticInterval();
+
         $boardIds = $this->statisticResultRepository->getKanbanizeBoards();
 
         $id = $this->statisticResultRepository->getNewStatisticId();
 
         return view('settings',
-            compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection', 'id'));
+            compact('fetchTableData', 'names', 'periodSelection', 'boardIds', 'settingId', 'variationSelection', 'id', 'intervalSelection'));
     }
 
     public function saveSettingsOnButtonClick($settingId)
