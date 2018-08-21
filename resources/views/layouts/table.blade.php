@@ -26,7 +26,7 @@
                     <th> Open</th>
                     <th> Doing</th>
                     <th> Done</th>
-                    <th> New Bugs</th>
+                    <th> New </th>
 
                 </tr>
                 </thead>

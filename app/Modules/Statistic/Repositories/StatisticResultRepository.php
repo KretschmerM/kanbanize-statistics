@@ -416,40 +416,25 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             foreach ($date as $day => $values) {
                 $newBugs += $values['newBugs'];
                 if ($statistic['data']['interval'] === 'Weekly') {
-                    if (Carbon::parse($interval) == Carbon::parse($day)) {
-                        $data[$day] = [
-                            'open' => $values['open'],
-                            'doing' => $values['doing'],
-                            'done' => $values['done'],
-                            'newBugs' => $values['newBugs'],
-                        ];
-                        $values['newBugs'] = $newBugs;
+                    if (Carbon::parse($interval)->toDateString() === Carbon::parse($day)->toDateString()) {
+
+                        $data = $this->buildDateArray($values, $newBugs, $day, $data);
                         $newBugs = 0;
                         $interval = Carbon::parse($interval)->addWeek();
                         $interval = $interval->toDateString();
                     }
                 } elseif ($statistic['data']['interval'] === 'Sprint 2 Weeks') {
-                    if (Carbon::parse($interval) == Carbon::parse($day)) {
-                        $data[$day] = [
-                            'open' => $values['open'],
-                            'doing' => $values['doing'],
-                            'done' => $values['done'],
-                            'newBugs' => $values['newBugs'],
-                        ];
-                        $values['newBugs'] = $newBugs;
+                    if (Carbon::parse($interval)->toDateString() === Carbon::parse($day)->toDateString()) {
+
+                        $data = $this->buildDateArray($values, $newBugs, $day, $data);
                         $newBugs = 0;
                         $interval = Carbon::parse($interval)->addWeeks(2);
                         $interval = $interval->toDateString();
                     }
                 } elseif ($statistic['data']['interval'] === 'Monthly') {
-                    if (Carbon::parse($interval) == Carbon::parse($day)) {
-                        $data[$day] = [
-                            'open' => $values['open'],
-                            'doing' => $values['doing'],
-                            'done' => $values['done'],
-                            'newBugs' => $values['newBugs'],
-                        ];
-                        $values['newBugs'] = $newBugs;
+                    if (Carbon::parse($interval)->toDateString() === Carbon::parse($day)->toDateString()) {
+
+                        $data = $this->buildDateArray($values, $newBugs, $day, $data);
                         $newBugs = 0;
                         $interval = Carbon::parse($interval)->addMonth();
                         $interval = $interval->toDateString();
@@ -460,6 +445,19 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         }
 
         return $date;
+    }
+
+    protected function buildDateArray($values, $newBugs, $day, $data)
+    {
+        $values['newBugs'] = $newBugs;
+        $data[$day] = [
+            'open' => $values['open'],
+            'doing' => $values['doing'],
+            'done' => $values['done'],
+            'newBugs' => $values['newBugs'],
+        ];
+
+        return $data;
     }
 
     public function getStatisticOptions()

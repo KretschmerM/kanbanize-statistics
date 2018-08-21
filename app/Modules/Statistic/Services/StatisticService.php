@@ -59,7 +59,7 @@ class StatisticService
             ->addNumberColumn('open')
             ->addNumberColumn('doing')
             ->addNumberColumn('done')
-            ->addNumberColumn('newBugs');
+            ->addNumberColumn('new');
 
         foreach ($data as $date => $values) {
             $statisticLineChart->addRow([
