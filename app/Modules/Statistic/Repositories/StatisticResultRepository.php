@@ -74,7 +74,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             $test = Carbon::createFromFormat('Y-m-d H:i:s', $task->createdat);
 
             if ($test->gte(Carbon::now()->subDays(1))) {
-                $newBugs += 1;
+                $newBugs++;
             }
         }
 
@@ -364,8 +364,6 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ->groupBy('columnId', 'date', 'newBugs')
             ->get();
 
-//        $this->cacheBoardIds[$boardId] = $getData;
-
         return $getData;
     }
 
@@ -485,7 +483,7 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
             ])
             ->max('settingId');
 
-        $id = $settingIds + 1;
+        $id = $settingIds++;
 
         return $id;
     }
