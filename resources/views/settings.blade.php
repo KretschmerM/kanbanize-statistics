@@ -11,6 +11,11 @@
 
     <title>project</title>
 </head>
+
+@if(Auth::guest())
+<script> window.location = "/login";</script>
+@endif
+
 <body>
 @include('layouts.nav')
 <div>
@@ -26,7 +31,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-10">
+                <div class="col-sm-12">
                     <div class="panel-heading" style="margin-top: 10px">
                         <a> Board: </a>
                     @if (isset($fetchTableData['data']['boardId']) && $fetchTableData['data']['boardId'] <= 0)

@@ -3,40 +3,6 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
-      integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-      integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
-      integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-
-
-<style>
-    .panel-heading {
-        color: white;
-        background-color: #6c757d;
-        text-align: center;
-    }
-</style>
-
-<head>
-    <title>project</title>
-</head>
-<body>
-@include('layouts.nav')
-<br>
-
-<div class="container">
-    <div class="row">
-    @foreach($settings as $option)
-
-        @include('statisticBox', ['option' => $option])
-
-    @endforeach
-    </div>
-</div>
-
-<!--@include('layouts.footer')-->
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -48,9 +14,52 @@
         integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+      integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+
+<style>
+    .panel-heading {
+        color: white;
+        background-color: #6c757d;
+        text-align: center;
+    }
+</style>
+
+@if(Auth::guest())
+<script> window.location = "/login";</script>
+@endif
+
+<body>
+
+<div>
+    @if(Auth::check())
+
+    @include('layouts.nav')
+
+    <br>
+
+
+    <div class="container">
+        <div class="row">
+
+
+            @foreach($settings as $option)
+
+            @include('statisticBox', ['option' => $option])
+
+            @endforeach
+
+
+        </div>
+
+    </div>
+
+    @endif
+</div>
 
 </body>
 
 </html>
-
-

@@ -37,4 +37,6 @@ interface StatisticResultRepositoryContract
     public function deleteStatistic($settingId);
 
     public function getNewStatisticId();
+
+    public function getUserSettings();
 }

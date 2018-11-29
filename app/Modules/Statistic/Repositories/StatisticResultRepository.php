@@ -490,4 +490,11 @@ class StatisticResultRepository implements StatisticResultRepositoryContract
         return $id;
     }
 
+    public function getUserSettings()
+    {
+        // TODO: Implement getUserSettings() method.
+
+
+    }
+
 }

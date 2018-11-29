@@ -21,6 +21,18 @@ Route::post('/settings/{settingId}', 'AllController@saveSettingsOnButtonClick');
 
 Route::delete('/settings/{settingId}', 'AllController@deleteStatisticOnButtonClick');
 
+Route::get('/user/settings', 'AllController@openUserSettings');
+
+
+Route::get('/logout', function () {
+    Auth::logout();
+
+    return redirect('/login');
+});
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
 //Route::resource('/','AllController@index');
 
 

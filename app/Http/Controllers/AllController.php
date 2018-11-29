@@ -95,4 +95,9 @@ class AllController extends Controller
             return $this->index();
         }
     }
+
+    public function openUserSettings()
+    {
+        return view('userSettings');
+    }
 }
