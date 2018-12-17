@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\DB;
 class StatisticResultRepository implements StatisticResultRepositoryContract
 {
 
-//    private $cacheBoardIds = [];
-
     /**
      * @param $boardId
      * @return mixed

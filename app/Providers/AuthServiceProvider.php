@@ -25,6 +25,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        \Validator::extend('email_domain', function($attribute, $value, $parameters, $validator) {
+            $allowedEmailDomains = [env('URL'), 'test.' . env('URL')];
+            return in_array( explode('@', $parameters[0])[1] , $allowedEmailDomains);
+        });
+
     }
 }
